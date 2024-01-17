@@ -1,0 +1,18 @@
+- name: Print firewall rules
+  hosts: windows_servers
+  gather_facts: false
+
+  vars:
+    ad_domain: "bobby.shmurda"  # Specify your Active Directory domain
+    ad_user: "Administrator"     # Specify a user with sufficient privileges
+    ad_password: "Password123!"
+
+  tasks:
+    - name: print firewallrules
+      - win_shell: GetNetFireWallRule
+      register: firewall_rules
+
+    - name: Display firewallRules
+      debug:
+        var: firewall_rules.stdout_lines
+
