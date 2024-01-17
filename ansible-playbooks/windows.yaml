@@ -15,7 +15,8 @@
         domain_admin_user: "{{ ad_user }}"
         domain_admin_password: "{{ ad_password }}"
         state: "domain"
-
-
-
+    
+    - name: Restart the machine
+      win_reboot:
+      when: ansible_reboot_pending | bool
 
