@@ -1,0 +1,21 @@
+---
+- name: Join Windows Machine to Active Directory
+  hosts: windows_servers
+  gather_facts: false  # Disable fact gathering for Windows hosts
+
+  vars:
+    ad_domain: "bobby.shmurda"  # Specify your Active Directory domain
+    ad_user: "Administrator"     # Specify a user with sufficient privileges
+    ad_password: "Password123!" # Specify the password for the user
+
+  tasks:
+    - name: Join the machine to AD
+      win_domain_membership:
+        dns_domain_name: "{{ ad_domain }}"
+        domain_admin_user: "{{ ad_user }}"
+        domain_admin_password: "{{ ad_password }}"
+        state: "domain"
+
+
+
+
