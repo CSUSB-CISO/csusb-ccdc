@@ -1,3 +1,2 @@
-ansible-playbooks/windows/windowsANS/listcontents.txt
-ansible-playbooks/windows/windowsANS/installsysmon.txt
-ansible-playbooks/windows/windowsANS/inventory.ini
+listcontents.txt
+installsysmon.txt

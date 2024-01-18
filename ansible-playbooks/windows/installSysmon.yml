@@ -8,37 +8,37 @@
       set_fact:
         os_version: "{{ ansible_facts['distribution'] }}"
 
-    - name: Create Temp dir
+    - name: Create TempSys dir
       win_file:
-        path: "C:/Temp"
+        path: "C:/TempSys"
         state: directory
 
     - name: Conditional Task - Download Sysmon for Win7/2008
       win_get_url:
         url: "https://github.com/CSUSB-CISO/csusb-ccdc/raw/main/ansible-playbooks/windows/Sysmon.zip"
-        dest: "C:/Temp/Sysmon.zip"
+        dest: "C:/TempSys/Sysmon.zip"
         force: yes
-      when: "'Windows 7' in os_version or '2008' in os_version "
+      when: "'Windows 7' in os_version or '2008' in os_version"
 
     - name: Conditional Task - Download Sysmon
       win_get_url:
         url: "https://download.sysinternals.com/files/Sysmon.zip"
-        dest: "C:/Temp/Sysmon.zip"
+        dest: "C:/TempSys/Sysmon.zip"
         force: yes
-      when: "'Windows 7' not in os_version and '2008' in os_version"
+      when: "'Windows 7' not in os_version and '2008' not in os_version"
 
     - name: Unzip Sysmon
       win_unzip:
-        src: "C:/Temp/Sysmon.zip"
-        dest: "C:/Temp/Sysmon"
-        creates: "C:/Temp/Sysmon/Sysmon.exe"
+        src: "C:/TempSys/Sysmon.zip"
+        dest: "C:/TempSys/Sysmon"
+        creates: "C:/TempSys/Sysmon/Sysmon64.exe"
 
     - name: Install Sysmon
-      win_shell: "C:/Temp/Sysmon/Sysmon.exe -accepteula -i"
+      win_shell: "C:/TempSys/Sysmon/Sysmon64.exe -accepteula -i"
       args:
         executable: powershell
 
     - name: Remove temporary files
       win_file:
-        path: "C:/Temp"
+        path: "C:/TempSys"
         state: absent
