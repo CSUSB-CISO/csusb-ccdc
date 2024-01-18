@@ -1,0 +1,44 @@
+---
+- name: Install Sysmon on Windows
+  hosts: all
+  gather_facts: true
+  tasks:
+
+    - name: Check OS
+      set_fact:
+        os_version: "{{ ansible_facts['distribution'] }}"
+
+    - name: Create Temp dir
+      win_file:
+        path: "C:/Temp"
+        state: directory
+
+    - name: Conditional Task - Download Sysmon for Win7
+      win_get_url:
+        url: "https://web.archive.org/web/20210503162458/https://download.sysinternals.com/files/Sysmon.zip"
+        dest: "C:/Temp/Sysmon.zip"
+        force: yes
+      when: "'Windows 7' in os_version or '2008' in os_version "
+
+    - name: Conditional Task - Download Sysmon
+      win_get_url:
+        url: "https://download.sysinternals.com/files/Sysmon.zip"
+        dest: "C:/Temp/Sysmon.zip"
+        force: yes
+      when: "'Windows 7' not in os_version and '2008' in os_version"
+
+    - name: Unzip Sysmon
+      win_unzip:
+        src: "C:/Temp/Sysmon.zip"
+        dest: "C:/Temp/Sysmon"
+        creates: "C:/Temp/Sysmon/Sysmon.exe"
+
+    - name: Install Sysmon
+      win_shell: "C:/Temp/Sysmon/Sysmon.exe -accepteula -i"
+      args:
+        executable: powershell
+
+    - name: Remove temporary files
+      win_file:
+        path: "C:/Temp"
+        state: absent
