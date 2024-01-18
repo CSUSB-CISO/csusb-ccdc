@@ -1,14 +1,14 @@
 ---
-- name: Install Chainsaw & its dependencies, run it with JSON output
+- name: Install chainsaw & its dependencies, run it with JSON output
   hosts: windows_hosts  # Replace with your target hosts
   gather_facts: no
 
   tasks:
-    - name: Get current username
+    - name: Get Current Username
       win_whoami:
       register: current_user
 
-    - name: Display current username
+    - name: Display Current Username
       debug:
         var: current_user.account.account_name # access th ecurrent username via current_user.account.account_name
 
@@ -49,13 +49,20 @@
         url: https://github.com/CSUSB-CISO/csusb-ccdc/raw/main/ansible-playbooks/chainsaw/chainsaw.exe
         dest: C:\Users\{{current_user.account.account_name}}\Desktop\chainsaw
 
-    - name: Download vscode redist fix from our Github # May want to implement a flow to install 64-bit or 32-bit depending on system architecture
+    - name: Download vscode fix from our Github # May want to implement a flow to install 64-bit or 32-bit depending on system architecture
       ansible.windows.win_get_url:
         url: https://github.com/CSUSB-CISO/csusb-ccdc/raw/main/ansible-playbooks/chainsaw/VC_redist.x64.exe
         dest: C:\Users\{{current_user.account.account_name}}\Desktop\
 
 
-
+          #- name: Run vscode fix quietly
+          #ansible.builtin.win_shell: |
+          #C:\Users\{{current_user.account.account_name}}\Desktop\VC_redist.x64.exe
+        
+    - name: Run visual studio fix for chainsaw quietly
+      ansible.builtin.win_shell: |
+        C:\Users\{{current_user.account.account_name}}\Desktop\VC_redist.x64.exe /quiet # Running this fix quietly may not work since it may be required that we restart the machine. So if chainsaw doesn't seem to be running correctly, this should be the 1st place we look (:
+        
     - name: Run chainsaw with flags & output in JSON
       ansible.builtin.win_shell: |
         C:\Users\{{current_user.account.account_name}}\Desktop\chainsaw\chainsaw.exe hunt -r C:\Users\{{current_user.account.account_name}}\Desktop\chainsaw\rules\ C:\Windows\System32\winevt\Logs -s C:\Users\{{current_user.account.account_name}}\Desktop\chainsaw\sigma\rules --mapping C:\Users\{{current_user.account.account_name}}\Desktop\chainsaw\sigma-event-logs-all.yml --json
