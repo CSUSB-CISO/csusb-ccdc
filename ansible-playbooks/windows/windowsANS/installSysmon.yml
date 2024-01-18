@@ -13,9 +13,9 @@
         path: "C:/Temp"
         state: directory
 
-    - name: Conditional Task - Download Sysmon for Win7
+    - name: Conditional Task - Download Sysmon for Win7/2008
       win_get_url:
-        url: "https://web.archive.org/web/20210503162458/https://download.sysinternals.com/files/Sysmon.zip"
+        url: "https://github.com/CSUSB-CISO/csusb-ccdc/raw/main/ansible-playbooks/windows/Sysmon.zip"
         dest: "C:/Temp/Sysmon.zip"
         force: yes
       when: "'Windows 7' in os_version or '2008' in os_version "
