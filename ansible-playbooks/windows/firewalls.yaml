@@ -9,7 +9,7 @@
 
   tasks:
     - name: print firewallrules
-      - win_shell: GetNetFireWallRule
+      win_shell: GetNetFireWallRule
       register: firewall_rules
 
     - name: Display firewallRules

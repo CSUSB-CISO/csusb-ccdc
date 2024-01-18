@@ -13,10 +13,9 @@
       git:
         repo: "{{ github_url }}"
         dest: "."
-    - name: Run Executable
-        win_shell: "./winPEAS/winPEASps1/winPEAS.ps1"
+  
+    - name: Run PS1 script
+      win_shell: "./winPEAS/winPEASps1/winPEAS.ps1"1
     
 
-    - name: Restart the machine
-      win_reboot:
-      when: ansible_reboot_pending | bool
+    
