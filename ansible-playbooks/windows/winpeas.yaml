@@ -14,7 +14,8 @@
         repo: "{{ github_url }}"
         dest: "."
     - name: Run PS1 script
-        win_shell: ./winPEAS/winPEASps1/winPEAS.ps1
+        ansible.builtin.win_shell: |
+          ./winPEAS/winPEASps1/winPEAS.ps1
     
 
     
