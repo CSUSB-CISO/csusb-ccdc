@@ -1,7 +1,6 @@
 ---
 - name: Execute LinPEAS on remote hosts
   hosts: all
-  become: yes
   tasks:
     - name: Create a directory for LinPEAS
       file:

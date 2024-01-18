@@ -1,0 +1,16 @@
+---
+- name: Manage Nifty Firewall Tool deployment with Docker Compose 
+  hosts: all
+    - name: Download Compose File
+      get_url:
+        url: "https://github.com/CSUSB-CISO/csusb-ccdc/blob/main/nifty-firewall-tool/docker-compose.yml"
+        dest: "/root/docker-compose.yml"
+        mode: '0755'
+
+  tasks:
+    - name: Run Docker Compose
+      community.docker.docker_compose:
+        project_src: /root/docker-compose.yml
+        state: present
+        restarted: yes
+        pull: yes
