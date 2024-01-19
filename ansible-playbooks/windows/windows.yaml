@@ -1,6 +1,6 @@
 ---
 - name: Join Windows Machine to Active Directory
-  hosts: windows_servers
+  hosts: all
   gather_facts: false  # Disable fact gathering for Windows hosts
 
  
