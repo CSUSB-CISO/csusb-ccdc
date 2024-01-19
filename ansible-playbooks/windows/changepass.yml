@@ -1,6 +1,6 @@
 ---
 - name: Change password for all Active Directory users
-  hosts: windows_hosts
+  hosts: all
   gather_facts: no
   vars:
     excluded_users: "krbtgt"  # LIST OF USERNAMES IN COMMA SEPARATED LIST TO EXCLUDE (KRBTGT, HUNTEE, FRIYAY, etc  )

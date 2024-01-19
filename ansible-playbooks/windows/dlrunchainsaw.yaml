@@ -1,6 +1,6 @@
 ---
 - name: Install chainsaw & its dependencies, run it with JSON output
-  hosts: windows_hosts  # Replace with your target hosts
+  hosts: all  
   gather_facts: no
 
   tasks:
