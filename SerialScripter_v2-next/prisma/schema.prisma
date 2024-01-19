@@ -1,0 +1,283 @@
+ // This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Status {
+    UP
+    DOWN
+}
+
+enum PortStatus {
+    established
+    synSent
+    synRecv
+    finWait1
+    finWait2
+    timeWait
+    closed
+    closeWait
+    lastAck
+    listen
+    closing
+    unknown
+}
+
+enum IncidentTag {
+    exfiltration
+    access
+    userCompromise
+}
+
+
+enum SystemServiceStatus {
+    active
+    inactive
+    failed
+    unknown
+}
+
+enum UserType {
+    PRIVILEGED
+    USER // Assuming there might be regular users as well.
+}
+
+enum ShareType {
+  nFS
+  sMB
+}
+
+enum KeyType {
+    FIREWALL
+    HOST
+    GENERAL
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
+  password String
+  name     String?
+}
+
+model ApiKey {
+  id       Int     @id @default(autoincrement())
+  key      String  @unique
+  type     KeyType
+  lifetime Int
+}
+
+model ServerLog {
+  id            Int           @id @default(autoincrement())
+  email          String
+  success       Boolean
+  module        String
+  message       String
+  createdAt     DateTime      @default(now())
+}
+
+model SshKey {
+  id            Int           @id @default(autoincrement())
+  name          String
+  publicKey     String        @unique
+  createdAt     DateTime      @default(now())
+}
+
+model Host {
+  id                Int          @id @default(autoincrement())
+  hostname          String       @unique
+  ip                String       @unique
+  status            Status?       // Changed to enum type
+  os                String
+  version           String
+  cpu               String
+  cores             Int
+  memory            Int
+  macAddress        String?      // New field
+  gateway           String?
+  dhcp              Boolean?
+  password          String?
+  createdAt         DateTime     @default(now())
+  disks             Disk[]
+  systemServices    SystemService[]
+  networkServices   NetworkService[]
+  connections       Connection[]
+  incidents         Incident[]
+  software          Software[]
+  containers        Container[]
+  userAccounts      UserAccount[]
+  shares            Share[]
+  firewallRules     FirewallRule[]
+
+  @@unique([ hostname, ip])
+}
+
+model Disk {
+  id                  Int     @id @default(autoincrement())
+  name                String
+  mountPoint          String
+  filesystem          String
+  totalSpace          Int
+  availableSpace      Int
+  hostId              Int
+  host                Host?  @relation(fields: [hostId], references: [id])
+
+  @@unique([ mountPoint, hostId])
+}
+
+model SystemService {
+  id          Int    @id @default(autoincrement())
+  name        String
+  state       String
+  startMode   String?
+  status      SystemServiceStatus // Assuming Status is an enum with values like UP, DOWN
+  hostId      Int
+  host        Host?  @relation(fields: [hostId], references: [id])
+
+  @@unique([ name, hostId])
+}
+
+model NetworkService {
+  id          Int    @id @default(autoincrement())
+  name        String?
+  port        Int 
+  protocol    String
+  pid         Int?
+  version     String
+  state       PortStatus 
+  hostId      Int
+  host        Host?  @relation(fields: [hostId], references: [id])
+
+  @@unique([ port, hostId])
+}
+
+model Connection {
+  id                  Int    @id @default(autoincrement())
+  name                String?
+  localAddress        String
+  remoteAddress       String
+  pid                 Int?
+  protocol            String?
+  state               PortStatus? 
+  hostId              Int
+  host                Host?  @relation(fields: [hostId], references: [id])
+
+  @@unique([ localAddress, remoteAddress, hostId])
+}
+
+model Software {
+  id          Int      @id @default(autoincrement())
+  name        String
+  version     String?
+  path        String?
+  host        Host?    @relation(fields: [hostId], references: [id])
+  hostId      Int
+}
+
+model Container {
+  id                        Int      @id @default(autoincrement())
+  containerId               String   
+  name                      String
+  portBindings              String[]
+  status                    String
+  cmd                       String
+  containerNetworks         ContainerNetwork[]
+  containerVolumes          ContainerVolume[] // One-to-many relationship with Volume
+  host                      Host?    @relation(fields: [hostId], references: [id])
+  hostId                    Int
+
+  @@unique([ containerId, hostId])
+}
+
+model ContainerNetwork {
+  id                    Int      @id @default(autoincrement())
+  networkName           String
+  ip                    String
+  gateway               String
+  macAddress            String
+  container             Container? @relation(fields: [containerId], references: [id])
+  containerId           Int
+
+  @@unique([ networkName, containerId])
+}
+
+
+model ContainerVolume {
+  id                    Int      @id @default(autoincrement())
+  hostPath              String
+  containerPath         String
+  mode                  String
+  volumeName            String
+  rw                    Boolean
+  vType                 String   
+  container             Container? @relation(fields: [containerId], references: [id])
+  containerId           Int
+
+  @@unique([ volumeName, containerId])
+}
+
+
+model UserAccount {
+  id        Int       @id @default(autoincrement())
+  name      String
+  isLocal   Boolean
+  uid       String
+  gid       String
+  shell     String?
+  groups    String[]
+  isAdmin   Boolean
+  host      Host?    @relation(fields: [hostId], references: [id])
+  hostId    Int
+
+  @@unique([ name, uid, hostId])
+}
+
+model Share {
+  id            Int     @id @default(autoincrement())
+  shareType     ShareType
+  networkPath   String
+  host          Host?   @relation(fields: [hostId], references: [id])
+  hostId        Int
+  
+  @@unique([ networkPath, hostId])
+}
+
+model FirewallRule {
+  id            Int     @id @default(autoincrement())
+  action        String
+  dport         Int 
+  protocol      String
+  description   String?
+  host          Host?   @relation(fields: [hostId], references: [id])
+  hostId        Int
+  @@unique([ dport, hostId])
+}
+
+model Incident {
+  id                Int     @id @default(autoincrement())
+  name              String
+  ip                String
+  hostname          String
+  attachment        Bytes?
+  filename          String?
+  description       String
+  tags              IncidentTag[]
+  host              Host?        @relation(fields: [hostId], references: [id])
+  hostId            Int
+  createdAt         DateTime      @default(now())
+}
+
+model CronJob {
+  id            Int     @id @default(autoincrement())
+  name          String  @unique
+  schedule      String
+  command       String
+  lastOutput    String?
+}

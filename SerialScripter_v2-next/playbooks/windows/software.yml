@@ -1,0 +1,13 @@
+- name: Get Installed Software on Windows
+  hosts: all
+  gather_facts: true
+
+  tasks:
+    - name: Get Installed Software
+      win_shell: |
+        Get-WmiObject -Class Win32_Product | Select-Object Name, Version
+      register: installed_software
+
+    - name: Display Installed Software
+      debug:
+        var: installed_software.stdout_lines
