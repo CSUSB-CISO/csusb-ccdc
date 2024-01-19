@@ -1,5 +1,5 @@
 - name: Get Installed Software on Windows
-  hosts: windows_servers
+  hosts: all
   gather_facts: true
 
   tasks:
