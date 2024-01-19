@@ -1,11 +1,7 @@
 - name: Print firewall rules
-  hosts: windows_servers
+  hosts: all
   gather_facts: false
 
-  vars:
-    ad_domain: "bobby.shmurda"  # Specify your Active Directory domain
-    ad_user: "Administrator"     # Specify a user with sufficient privileges
-    ad_password: "Password123!"
 
   tasks:
     - name: print firewallrules
