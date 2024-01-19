@@ -1,11 +1,8 @@
 - name: Install WinPEAS to Windows
-  hosts: windows_servers
+  hosts: all
   gather_facts: false
   
   vars:
-    ad_domain: "bobby.shmurda"  # Specify your Active Directory domain
-    ad_user: "Administrator"     # Specify a user with sufficient privileges
-    ad_password: "Password123!"
     github_url: "https://github.com/carlospolop/PEASS-ng/tree/master/winPEAS"
 
   tasks:
