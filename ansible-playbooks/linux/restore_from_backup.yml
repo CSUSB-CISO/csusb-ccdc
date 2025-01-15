@@ -2,6 +2,7 @@
 - name: Restore playbook
   hosts: all
   gather_facts: no 
+  remote_user: "root"
 
   vars:
     backup_directory: "{{ backup_dir }}" 
