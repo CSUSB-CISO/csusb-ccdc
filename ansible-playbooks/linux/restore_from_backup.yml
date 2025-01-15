@@ -4,8 +4,8 @@
   gather_facts: no 
 
   vars:
-    backup_directory: "/opt/memento"
-    restore_directory: "/path/to/your/restore/directory" 
+    backup_directory: "{{ backup_dir }}" 
+    restore_directory: "{{ restore_dir }}" 
     source_name: "{{ source_name }}" #replace with the name of the source you want to restore
 
   tasks:
