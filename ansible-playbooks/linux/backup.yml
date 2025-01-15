@@ -2,6 +2,7 @@
 - name: Backup playbook
   hosts: all
   gather_facts: yes
+  remote_user: "root" 
 
   vars:
     source_directory: "{{ source_dir }}"
