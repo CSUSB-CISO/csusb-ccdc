@@ -4,8 +4,8 @@
   gather_facts: yes
 
   vars:
-    source_directory: "/path/to/your/source/directory"
-    backup_directory: "/opt/memento"
+    source_directory: "{{ source_dir }}"
+    backup_directory: "{{ backup_dir }}" 
 
   tasks:
     - name: Ensure the backup directory exists
