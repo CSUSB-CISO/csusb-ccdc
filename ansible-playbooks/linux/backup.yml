@@ -2,10 +2,11 @@
 - name: Backup playbook
   hosts: all
   gather_facts: yes
+  remote_user: "root" 
 
   vars:
-    source_directory: "/path/to/your/source/directory"
-    backup_directory: "/opt/memento"
+    source_directory: "{{ source_dir }}"
+    backup_directory: "{{ backup_dir }}" 
 
   tasks:
     - name: Ensure the backup directory exists
