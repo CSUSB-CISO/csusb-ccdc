@@ -2,10 +2,11 @@
 - name: Restore playbook
   hosts: all
   gather_facts: no 
+  remote_user: "root"
 
   vars:
-    backup_directory: "/opt/memento"
-    restore_directory: "/path/to/your/restore/directory" 
+    backup_directory: "{{ backup_dir }}" 
+    restore_directory: "{{ restore_dir }}" 
     source_name: "{{ source_name }}" #replace with the name of the source you want to restore
 
   tasks:
