@@ -409,6 +409,52 @@ function Enable-SecureSMB {
     }
 }
 
+function Ensure-PolicyFileEditor {
+    $moduleName = "PolicyFileEditor"
+    Write-Host "Checking for the $moduleName module..." -ForegroundColor Cyan
+
+    # Check if the module is available
+    if (-not (Get-Module -ListAvailable -Name $moduleName)) {
+        Write-Host "$moduleName module not found. Preparing to install from PSGallery." -ForegroundColor Yellow
+
+        # Retrieve PSGallery repository information
+        $psGallery = Get-PSRepository -Name PSGallery -ErrorAction SilentlyContinue
+        if ($psGallery) {
+            # If PSGallery is not trusted, set it to Trusted
+            if ($psGallery.InstallationPolicy -ne "Trusted") {
+                Write-Host "Setting PSGallery repository as Trusted..." -ForegroundColor Yellow
+                Set-PSRepository -Name PSGallery -InstallationPolicy Trusted -ErrorAction Stop
+            }
+        } else {
+            Write-Warning "PSGallery repository is not registered. You may need to register it manually."
+        }
+
+        # Install the module from PSGallery
+        try {
+            Write-Host "Installing $moduleName module..." -ForegroundColor Yellow
+            Install-Module -Name $moduleName -Force -Scope AllUsers -AllowClobber -ErrorAction Stop
+            Write-Host "$moduleName module installed successfully." -ForegroundColor Green
+        }
+        catch {
+            Write-Error "Failed to install $moduleName module. Error details: $_"
+            throw
+        }
+    }
+    else {
+        Write-Host "$moduleName module is already installed." -ForegroundColor Green
+    }
+
+    # Import the module into the current session
+    try {
+        Import-Module -Name $moduleName -Force -ErrorAction Stop
+        Write-Host "$moduleName module imported successfully." -ForegroundColor Green
+    }
+    catch {
+        Write-Error "Failed to import $moduleName module. Error details: $_"
+        throw
+    }
+}
+
 # Set-GroupPolicies
 <#
 .SYNOPSIS
@@ -425,30 +471,110 @@ function Enable-SecureSMB {
 .EXAMPLE
     Set-GroupPolicies
 #>
-function Set-GroupPolicies {
-    [CmdletBinding()]
-    param()
-    Write-Verbose "Configuring group policies..." -Verbose
+function Set-GroupPolicies() {
+    Write-Host "Applying hardening Group Policy settings..." -ForegroundColor Gray
     try {
-        $policies = @{
-            "SOFTWARE\Policies\Microsoft\Messenger\Client" = @{ "PreventAutoRun" = 1 }
-            "SOFTWARE\Policies\Microsoft\SearchCompanion" = @{ "DisableContentFileUpdates" = 1 }
-            "SOFTWARE\Policies\Microsoft\Windows NT\IIS" = @{ "PreventIISInstall" = 1 }
-            "SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" = @{ "NoAutoUpdate" = 0 }
-        }
+        # === USER ACCOUNT CONTROL (UAC) Settings ===
+        # Enable UAC overall
+        Set-PolicyFileEntry -Path "$env:systemroot\system32\GroupPolicy\Machine\registry.pol" `
+            -Key "SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" `
+            -ValueName "EnableLUA" -Type DWord -Data 1
+        # Require Admin Approval Mode for the built-in Administrator account
+        Set-PolicyFileEntry -Path "$env:systemroot\system32\GroupPolicy\Machine\registry.pol" `
+            -Key "SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" `
+            -ValueName "FilterAdministratorToken" -Type DWord -Data 1
+        # Prompt for consent on the secure desktop for administrators
+        Set-PolicyFileEntry -Path "$env:systemroot\system32\GroupPolicy\Machine\registry.pol" `
+            -Key "SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" `
+            -ValueName "ConsentPromptBehaviorAdmin" -Type DWord -Data 2
+        # Automatically deny elevation requests for standard users
+        Set-PolicyFileEntry -Path "$env:systemroot\system32\GroupPolicy\Machine\registry.pol" `
+            -Key "SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" `
+            -ValueName "ConsentPromptBehaviorUser" -Type DWord -Data 0
+        # Switch to secure desktop when prompting for elevation
+        Set-PolicyFileEntry -Path "$env:systemroot\system32\GroupPolicy\Machine\registry.pol" `
+            -Key "SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" `
+            -ValueName "PromptOnSecureDesktop" -Type DWord -Data 1
+        # Only elevate UIAccess apps installed in secure locations
+        Set-PolicyFileEntry -Path "$env:systemroot\system32\GroupPolicy\Machine\registry.pol" `
+            -Key "SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" `
+            -ValueName "EnableSecureUIAPaths" -Type DWord -Data 1
+        # Virtualize file and registry write failures per user
+        Set-PolicyFileEntry -Path "$env:systemroot\system32\GroupPolicy\Machine\registry.pol" `
+            -Key "SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" `
+            -ValueName "EnableVirtualization" -Type DWord -Data 1
 
-        foreach ($path in $policies.Keys) {
-            foreach ($setting in $policies[$path].GetEnumerator()) {
-                Set-PolicyFileEntry -Path $env:systemroot\system32\GroupPolicy\Machine\registry.pol `
-                    -Key $path -ValueName $setting.Key -Type DWord -Data $setting.Value
-            }
-        }
-        Write-SecurityLog -Component "GroupPolicy" -Message "Successfully configured group policies"
+        # === LDAP Signing Settings ===
+        # For domain controllers and clients: require LDAP signing on the server and client
+        Set-PolicyFileEntry -Path "$env:systemroot\system32\GroupPolicy\Machine\registry.pol" `
+            -Key "SYSTEM\CurrentControlSet\Services\NTDS\Parameters" `
+            -ValueName "LDAPServerIntegrity" -Type DWord -Data 2
+        Set-PolicyFileEntry -Path "$env:systemroot\system32\GroupPolicy\Machine\registry.pol" `
+            -Key "SYSTEM\CurrentControlSet\Services\NTDS\Parameters" `
+            -ValueName "LDAPClientIntegrity" -Type DWord -Data 2
+        # Require LDAP Channel Binding tokens (value '2' is used here as an example for "Always")
+        Set-PolicyFileEntry -Path "$env:systemroot\system32\GroupPolicy\Machine\registry.pol" `
+            -Key "SYSTEM\CurrentControlSet\Services\NTDS\Parameters" `
+            -ValueName "LDAPChannelBinding" -Type DWord -Data 2
+
+        # === SMB Signing Settings ===
+        # Client: digitally sign communications (always)
+        Set-PolicyFileEntry -Path "$env:systemroot\system32\GroupPolicy\Machine\registry.pol" `
+            -Key "SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" `
+            -ValueName "RequireSecuritySignature" -Type DWord -Data 1
+        # Server: digitally sign communications (always)
+        Set-PolicyFileEntry -Path "$env:systemroot\system32\GroupPolicy\Machine\registry.pol" `
+            -Key "SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" `
+            -ValueName "RequireSecuritySignature" -Type DWord -Data 1
+
+        # === SChannel (Secure Channel) Signing Settings ===
+        # Force signing or encryption on secure channel data
+        Set-PolicyFileEntry -Path "$env:systemroot\system32\GroupPolicy\Machine\registry.pol" `
+            -Key "SYSTEM\CurrentControlSet\Services\Netlogon\Parameters" `
+            -ValueName "SignSecureChannel" -Type DWord -Data 1
+
+        # === NTLMv2 Settings ===
+        # Set LAN Manager authentication level to send NTLMv2 responses only (refuse LM & NTLM)
+        Set-PolicyFileEntry -Path "$env:systemroot\system32\GroupPolicy\Machine\registry.pol" `
+            -Key "SYSTEM\CurrentControlSet\Control\Lsa" `
+            -ValueName "LmCompatibilityLevel" -Type DWord -Data 5
+
+        # === Remote Desktop & Secure Channel Enhancements ===
+        # Require Network Level Authentication (NLA) for Remote Desktop
+        Set-PolicyFileEntry -Path "$env:systemroot\system32\GroupPolicy\Machine\registry.pol" `
+            -Key "SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" `
+            -ValueName "UserAuthentication" -Type DWord -Data 1
+
+        # === Security Log Size ===
+        # Set the maximum Security log size to 196608 KB (adjust this value as needed)
+        Set-PolicyFileEntry -Path "$env:systemroot\system32\GroupPolicy\Machine\registry.pol" `
+            -Key "SYSTEM\CurrentControlSet\Services\Eventlog\Security" `
+            -ValueName "MaxSize" -Type DWord -Data 196608
+
+        # === PowerShell Logging ===
+        # Enable PowerShell Script Block Logging
+        Set-PolicyFileEntry -Path "$env:systemroot\system32\GroupPolicy\Machine\registry.pol" `
+            -Key "SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" `
+            -ValueName "EnableScriptBlockLogging" -Type DWord -Data 1
+
+        # === Name Resolution & Proxy Settings ===
+        # Disable LLMNR (Multicast Name Resolution)
+        Set-PolicyFileEntry -Path "$env:systemroot\system32\GroupPolicy\Machine\registry.pol" `
+            -Key "SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" `
+            -ValueName "EnableMulticast" -Type DWord -Data 0
+        # Disable WPAD (Web Proxy Auto-Discovery) by deactivating the WinHttpAutoProxySvc
+        Set-PolicyFileEntry -Path "$env:systemroot\system32\GroupPolicy\Machine\registry.pol" `
+            -Key "SYSTEM\CurrentControlSet\Services\WinHttpAutoProxySvc" `
+            -ValueName "Start" -Type DWord -Data 4
+
+        Write-Host "Group Policy hardening settings applied successfully." -ForegroundColor Green
     }
     catch {
-        Write-SecurityLog -Component "GroupPolicy" -Message $_.Exception.Message -Level Error
+        Write-Output "$Error[0] $_" | Out-File "C:\Program Files\ezScript\groupPolicy.txt"
+        Write-Host "Error applying Group Policy settings. Check C:\Program Files\ezScript\groupPolicy.txt" -ForegroundColor DarkYellow
     }
 }
+
 
 # Disable-TelnetService
 <#
@@ -1059,10 +1185,11 @@ function Invoke-SecurityHardening {
     $components = @(
         @{Name = "Set-AuditPolicy"; Description = "Configuring audit policies"},
         @{Name = "Set-GlobalAuditPolicy"; Description = "Setting up global audit policies"},
+        @{Name = "Ensure-PolicyFileEditor"; Description = "Ensure required modules installed"}
         @{Name = "Set-SMBConfiguration"; Description = "Configuring SMB protocol"},
         @{Name = "Enable-SecureSMB"; Description = "Enabling secure SMB"},
         @{Name = "Set-GroupPolicies"; Description = "Setting group policies"},
-        #@{Name = "Disable-TelnetService"; Description = "Disabling Telnet"},
+        @{Name = "Disable-TelnetService"; Description = "Disabling Telnet"},
         @{Name = "Set-KerberoastingMitigation"; Description = "Configuring Kerberos security"},
         @{Name = "Set-ZerologonMitigation"; Description = "Configuring Zerologon mitigations"},
         @{Name = "Set-WindowsDefender"; Description = "Configuring Windows Defender"},
@@ -1071,7 +1198,7 @@ function Invoke-SecurityHardening {
         @{Name = "Disable-AnonymousLDAP"; Description = "Securing LDAP"},
         @{Name = "Set-SecurityRegistry"; Description = "Configuring security registry"},
         @{Name = "Set-LocalAccounts"; Description = "Securing local accounts"},
-        @{Name = "Rename-AdminAccount"; Description = "Securing admin account"},
+        #@{Name = "Rename-AdminAccount"; Description = "Securing admin account"},
         @{Name = "Set-HomeGroupServices"; Description = "Configuring HomeGroup"},
         @{Name = "Set-TechnicalAccount"; Description = "Setting up technical account"}
     )
