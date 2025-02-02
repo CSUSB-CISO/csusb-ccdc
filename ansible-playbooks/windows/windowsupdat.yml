@@ -26,29 +26,29 @@
 
     - name: Ensure download directory exists
       win_file:
-        path: C:\msupdate-dl
+        path: C:/msupdate-dl
         state: directory
 
     - name: Ensure wget folder exists
       win_file:
-        path: C:\msupdate-dl\wget
+        path: C:/msupdate-dl/wget
         state: directory
 
     - name: Download wget binary from eternallybored.org
       win_get_url:
         url: "https://github.com/CSUSB-CISO/csusb-ccdc/raw/refs/heads/2024-25-Season/scripts/windows/msupdatedl/wget/wget.exezx"
-        dest: "C:\msupdate-dl\wget\wget.exe"
+        dest: "C:/msupdate-dl/wget/wget.exe"
         validate_certs: yes
 
     - name: Download the DownloadMSU script from GitHub
       win_get_url:
         url: "https://raw.githubusercontent.com/CSUSB-CISO/csusb-ccdc/refs/heads/2024-25-Season/scripts/windows/msupdatedl/MSUpdate-DL.ps1"  # Replace with your actual URL
-        dest: "C:\msupdate-dl\DownloadMSU.ps1"
+        dest: "C:/msupdate-dl/DownloadMSU.ps1"
         validate_certs: yes
 
     - name: Run the DownloadMSU script for each KB to download the .msu file
       win_shell: |
-        powershell.exe -ExecutionPolicy Bypass -File "C:\msupdate-dl\DownloadMSU.ps1" -KB "{{ item }}"
+        powershell.exe -ExecutionPolicy Bypass -File "C:/msupdate-dl/DownloadMSU.ps1" "{{ item }}"
       loop: "{{ update_kbs.stdout | from_json }}"
       args:
         executable: powershell.exe
@@ -60,7 +60,7 @@
 
     - name: Find downloaded .msu files for each KB folder
       win_find:
-        paths: "C:\msupdate-dl\{{ item }}"
+        paths: "C:/msupdate-dl/{{ item }}"
         patterns: "*.msu"
       loop: "{{ update_kbs.stdout | from_json }}"
       register: msu_files
