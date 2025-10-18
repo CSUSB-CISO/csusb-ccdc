@@ -57,6 +57,14 @@ param (
     [switch]$AddToPath
 )
 
+# Enable TLS 1.2 for PowerShell 3.0+ (required for HTTPS downloads)
+# PowerShell 3.0 defaults to TLS 1.0 which most modern sites reject
+try {
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+} catch {
+    Write-Warning "Could not enable TLS 1.2. Downloads may fail."
+}
+
 # Configuration
 $BaseDir = if ($env:KK_BASE_DIR) { $env:KK_BASE_DIR } else { "C:\KeyboardKowboys" }
 $DefaultInstallPath = "$BaseDir\tools\sysinternals"

@@ -28,6 +28,16 @@ param (
     [string]$SourceDir = $null
 )
 
+# Enable TLS 1.2 for PowerShell 3.0+ (required for HTTPS downloads from GitHub)
+# PowerShell 3.0 defaults to TLS 1.0 which most modern sites reject
+try {
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    Write-Host "TLS 1.2 enabled for secure downloads" -ForegroundColor Green
+} catch {
+    Write-Warning "Could not enable TLS 1.2: $_"
+    Write-Warning "Downloads may fail. Consider updating to PowerShell 5.1+"
+}
+
 # Ensure we're running as administrator
 if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     Write-Error "You need to run this script as an Administrator!"

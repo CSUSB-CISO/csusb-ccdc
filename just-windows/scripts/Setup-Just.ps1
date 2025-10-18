@@ -12,6 +12,16 @@ if ($PSVersion -lt 3) {
     exit 1
 }
 
+# Enable TLS 1.2 for PowerShell 3.0+ (required for HTTPS downloads from GitHub)
+# PowerShell 3.0 defaults to TLS 1.0 which most modern sites reject
+try {
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    Write-Host "TLS 1.2 enabled for secure downloads" -ForegroundColor Green
+} catch {
+    Write-Host "WARNING: Could not enable TLS 1.2: $_" -ForegroundColor Yellow
+    Write-Host "Downloads may fail. Consider updating to PowerShell 5.1+" -ForegroundColor Yellow
+}
+
 # Import Win32 API for broadcasting environment changes
 if (-not ("Win32.NativeMethods" -as [Type])) {
     Add-Type -Namespace Win32 -Name NativeMethods -MemberDefinition @"
