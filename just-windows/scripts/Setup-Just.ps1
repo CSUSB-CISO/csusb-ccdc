@@ -2,6 +2,16 @@ param(
     [string]$BaseDir = "C:\KeyboardKowboys"
 )
 
+# PowerShell version compatibility check
+$PSVersion = $PSVersionTable.PSVersion.Major
+Write-Host "PowerShell Version: $PSVersion" -ForegroundColor Cyan
+
+if ($PSVersion -lt 3) {
+    Write-Host "ERROR: This script requires PowerShell 3.0 or higher" -ForegroundColor Red
+    Write-Host "Current version: $($PSVersionTable.PSVersion)" -ForegroundColor Red
+    exit 1
+}
+
 # Import Win32 API for broadcasting environment changes
 if (-not ("Win32.NativeMethods" -as [Type])) {
     Add-Type -Namespace Win32 -Name NativeMethods -MemberDefinition @"
@@ -30,7 +40,7 @@ function Update-SessionEnvironment {
     Write-Host "Environment variables refreshed system-wide" -ForegroundColor Green
 }
 
-# Function to add a directory to PATH
+# Function to add a directory to PATH with graceful degradation
 function Add-DirectoryToPath {
     param (
         [string]$Directory,
@@ -39,18 +49,72 @@ function Add-DirectoryToPath {
 
     # Get the current PATH from the environment variables
     $currentPath = [Environment]::GetEnvironmentVariable("PATH", $PathType)
-    
+
     # Check if the directory is already in the PATH
     if ($currentPath -split ";" -contains $Directory) {
         Write-Host "Directory already exists in PATH: $Directory" -ForegroundColor Yellow
-        return
+        return $true
     }
-    
-    # Add the directory to PATH
-    $newPath = $currentPath + ";" + $Directory
-    [Environment]::SetEnvironmentVariable("PATH", $newPath, $PathType)
-    
-    Write-Host "Added directory to $PathType PATH: $Directory" -ForegroundColor Green
+
+    try {
+        # Add the directory to PATH
+        $newPath = $currentPath + ";" + $Directory
+        [Environment]::SetEnvironmentVariable("PATH", $newPath, $PathType)
+        Write-Host "Added directory to $PathType PATH: $Directory" -ForegroundColor Green
+        return $true
+    }
+    catch {
+        Write-Host "WARNING: Could not add to $PathType PATH (requires admin rights)" -ForegroundColor Yellow
+
+        # If Machine PATH failed, try User PATH as fallback
+        if ($PathType -eq "Machine") {
+            Write-Host "Falling back to User PATH..." -ForegroundColor Yellow
+            return (Add-DirectoryToPath -Directory $Directory -PathType "User")
+        }
+
+        Write-Host "You can manually add to PATH: $Directory" -ForegroundColor Yellow
+        return $false
+    }
+}
+
+# Function to download files with PowerShell 3.0 compatibility
+function Download-File {
+    param (
+        [string]$Url,
+        [string]$OutFile
+    )
+
+    try {
+        if ($PSVersion -ge 3) {
+            # Use Invoke-WebRequest for PS 3.0+
+            Invoke-WebRequest -Uri $Url -OutFile $OutFile -UseBasicParsing -ErrorAction Stop
+            return $true
+        }
+        else {
+            # Fallback to WebClient for older versions
+            $webClient = New-Object System.Net.WebClient
+            $webClient.DownloadFile($Url, $OutFile)
+            $webClient.Dispose()
+            return $true
+        }
+    }
+    catch {
+        Write-Host "ERROR downloading $Url : $_" -ForegroundColor Red
+        return $false
+    }
+}
+
+# Function to detect system architecture
+function Get-SystemArchitecture {
+    $arch = $env:PROCESSOR_ARCHITECTURE
+    $is64Bit = [Environment]::Is64BitOperatingSystem
+
+    if ($is64Bit) {
+        return "x86_64-pc-windows-msvc"
+    }
+    else {
+        return "i686-pc-windows-msvc"
+    }
 }
 
 # Display script info
@@ -92,19 +156,14 @@ try {
     # Download the zip file
     $ZipUrl = "https://github.com/CSUSB-CISO/csusb-ccdc/releases/download/CCDC-2024-2025/just-win.zip"
     $ZipFile = Join-Path -Path $TmpDir -ChildPath "just-win.zip"
-    
+
     Write-Host "Downloading Keyboard Kowboys files..." -ForegroundColor Green
-    
-    # Check if we need to use .NET WebClient (PowerShell < 6) or Invoke-WebRequest
-    if ($PSVersionTable.PSVersion.Major -lt 6) {
-        $WebClient = New-Object System.Net.WebClient
-        $WebClient.DownloadFile($ZipUrl, $ZipFile)
-    } else {
-        Invoke-WebRequest -Uri $ZipUrl -OutFile $ZipFile -UseBasicParsing
-    }
-    
+
+    # Use our Download-File function for compatibility
+    $downloadSuccess = Download-File -Url $ZipUrl -OutFile $ZipFile
+
     # Check if download was successful
-    if (-not (Test-Path -Path $ZipFile)) {
+    if (-not $downloadSuccess -or -not (Test-Path -Path $ZipFile)) {
         throw "Failed to download the zip file. Please check your internet connection."
     }
     
@@ -125,38 +184,77 @@ try {
     $JustWindowsDir = Join-Path -Path $ExtractTempDir -ChildPath "just-windows"
     if (Test-Path -Path $JustWindowsDir) {
         Write-Host "Found 'just-windows' directory in the zip contents" -ForegroundColor Green
-        
+
         # Check for Justfile in the just-windows directory
         $JustfilePaths = @(
             (Join-Path -Path $JustWindowsDir -ChildPath "Justfile"),
             (Join-Path -Path $JustWindowsDir -ChildPath "justfile")
         )
-        
+
         $JustfileFound = $false
         foreach ($JustfilePath in $JustfilePaths) {
             if (Test-Path -Path $JustfilePath) {
-                Write-Host "Found Justfile at $JustfilePath, copying files..." -ForegroundColor Green
-                Copy-Item -Path $JustfilePath -Destination (Join-Path -Path $BaseDir -ChildPath "Justfile") -Force
+                $targetJustfile = Join-Path -Path $BaseDir -ChildPath "Justfile"
+
+                # Only copy if Justfile doesn't exist (preserve existing)
+                if (-not (Test-Path -Path $targetJustfile)) {
+                    Write-Host "Copying Justfile..." -ForegroundColor Green
+                    Copy-Item -Path $JustfilePath -Destination $targetJustfile -Force
+                }
+                else {
+                    Write-Host "Justfile already exists (preserving existing)" -ForegroundColor Yellow
+                }
                 $JustfileFound = $true
                 break
             }
         }
-        
-        # Copy scripts if they exist
+
+        # Copy scripts if they exist (preserve existing files)
         $ScriptsDir = Join-Path -Path $JustWindowsDir -ChildPath "scripts"
         if (Test-Path -Path $ScriptsDir) {
-            Write-Host "Copying scripts from $ScriptsDir to $BaseDir\scripts" -ForegroundColor Green
-            Copy-Item -Path "$ScriptsDir\*" -Destination "$BaseDir\scripts" -Recurse -Force
+            Write-Host "Copying scripts (preserving existing files)..." -ForegroundColor Green
+            $sourceScripts = Get-ChildItem -Path $ScriptsDir -File
+            foreach ($script in $sourceScripts) {
+                $targetScript = Join-Path -Path "$BaseDir\scripts" -ChildPath $script.Name
+
+                if (-not (Test-Path -Path $targetScript)) {
+                    Write-Host "  Adding new script: $($script.Name)" -ForegroundColor Cyan
+                    Copy-Item -Path $script.FullName -Destination $targetScript -Force
+                }
+                else {
+                    Write-Host "  Script already exists (skipping): $($script.Name)" -ForegroundColor Gray
+                }
+            }
         }
-        
-        # If Justfile not found, copy all contents
+
+        # If Justfile not found, copy all contents (preserving existing)
         if (-not $JustfileFound) {
             Write-Host "Could not find Justfile inside just-windows directory, copying all content" -ForegroundColor Yellow
-            Copy-Item -Path "$JustWindowsDir\*" -Destination $BaseDir -Recurse -Force
+            $items = Get-ChildItem -Path $JustWindowsDir
+            foreach ($item in $items) {
+                $targetPath = Join-Path -Path $BaseDir -ChildPath $item.Name
+
+                if (-not (Test-Path -Path $targetPath)) {
+                    Copy-Item -Path $item.FullName -Destination $targetPath -Recurse -Force
+                }
+                else {
+                    Write-Host "  Item already exists (skipping): $($item.Name)" -ForegroundColor Gray
+                }
+            }
         }
     } else {
-        Write-Host "No 'just-windows' directory found, copying all extracted files to $BaseDir" -ForegroundColor Yellow
-        Copy-Item -Path "$ExtractTempDir\*" -Destination $BaseDir -Recurse -Force
+        Write-Host "No 'just-windows' directory found, copying all extracted files (preserving existing)..." -ForegroundColor Yellow
+        $items = Get-ChildItem -Path $ExtractTempDir
+        foreach ($item in $items) {
+            $targetPath = Join-Path -Path $BaseDir -ChildPath $item.Name
+
+            if (-not (Test-Path -Path $targetPath)) {
+                Copy-Item -Path $item.FullName -Destination $targetPath -Recurse -Force
+            }
+            else {
+                Write-Host "  Item already exists (skipping): $($item.Name)" -ForegroundColor Gray
+            }
+        }
     }
     
     # Define the bin directory
@@ -165,27 +263,24 @@ try {
     # Install 'just' if not already installed
     if (-not (Get-Command -Name "just" -ErrorAction SilentlyContinue)) {
         Write-Host "Installing 'just' command..." -ForegroundColor Green
-        
+
         $JustVersion = "1.40.0"
-        $JustArch = "x86_64-pc-windows-msvc"
-        
-        # Check architecture
-        if ([Environment]::Is64BitOperatingSystem -eq $false) {
-            $JustArch = "i686-pc-windows-msvc"
-        }
-        
+        $JustArch = Get-SystemArchitecture
+
+        Write-Host "Detected architecture: $JustArch" -ForegroundColor Cyan
+
         $JustUrl = "https://github.com/casey/just/releases/download/$JustVersion/just-$JustVersion-$JustArch.zip"
         $JustZipFile = Join-Path -Path $TmpDir -ChildPath "just.zip"
         $JustExtractDir = Join-Path -Path $TmpDir -ChildPath "just_extract"
-        
+
         Write-Host "Downloading just $JustVersion for $JustArch..." -ForegroundColor Yellow
-        
-        # Download Just
-        if ($PSVersionTable.PSVersion.Major -lt 6) {
-            $WebClient = New-Object System.Net.WebClient
-            $WebClient.DownloadFile($JustUrl, $JustZipFile)
-        } else {
-            Invoke-WebRequest -Uri $JustUrl -OutFile $JustZipFile -UseBasicParsing
+
+        # Use our Download-File function for compatibility
+        $downloadSuccess = Download-File -Url $JustUrl -OutFile $JustZipFile
+
+        if (-not $downloadSuccess) {
+            Write-Host "ERROR: Failed to download just" -ForegroundColor Red
+            throw "just download failed"
         }
         
         # Create directory for extraction
@@ -271,29 +366,39 @@ init:
         }
     }
     
-    # Add our bin directory to PATH - both User and Machine level for maximum compatibility
-    Write-Host "Adding bin directory to PATH..." -ForegroundColor Green
-    Add-DirectoryToPath -Directory $BinDir -PathType "User"
-    
-    # Try to add to machine PATH if we have admin rights
-    try {
+    # Check if running as Administrator
+    $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+
+    if ($isAdmin) {
+        Write-Host "Running with Administrator privileges" -ForegroundColor Green
+
+        # Add bin directory to Machine PATH
+        Write-Host "Adding bin directory to Machine PATH..." -ForegroundColor Green
         Add-DirectoryToPath -Directory $BinDir -PathType "Machine"
-    } catch {
-        Write-Host "Could not add to Machine PATH (requires admin rights). User PATH was updated." -ForegroundColor Yellow
-    }
-    
-    # Add scripts directory to PATH as well
-    $ScriptsDirPath = Join-Path -Path $BaseDir -ChildPath "scripts"
-    if (Test-Path -Path $ScriptsDirPath) {
-        Write-Host "Adding scripts directory to PATH..." -ForegroundColor Green
-        Add-DirectoryToPath -Directory $ScriptsDirPath -PathType "User"
-        
-        # Try to add to machine PATH if we have admin rights
-        try {
+
+        # Add scripts directory to Machine PATH
+        $ScriptsDirPath = Join-Path -Path $BaseDir -ChildPath "scripts"
+        if (Test-Path -Path $ScriptsDirPath) {
+            Write-Host "Adding scripts directory to Machine PATH..." -ForegroundColor Green
             Add-DirectoryToPath -Directory $ScriptsDirPath -PathType "Machine"
-        } catch {
-            Write-Host "Could not add scripts to Machine PATH (requires admin rights). User PATH was updated." -ForegroundColor Yellow
         }
+    }
+    else {
+        Write-Host "Not running as Administrator - using User PATH" -ForegroundColor Yellow
+
+        # Add bin directory to User PATH
+        Write-Host "Adding bin directory to User PATH..." -ForegroundColor Green
+        Add-DirectoryToPath -Directory $BinDir -PathType "User"
+
+        # Add scripts directory to User PATH
+        $ScriptsDirPath = Join-Path -Path $BaseDir -ChildPath "scripts"
+        if (Test-Path -Path $ScriptsDirPath) {
+            Write-Host "Adding scripts directory to User PATH..." -ForegroundColor Green
+            Add-DirectoryToPath -Directory $ScriptsDirPath -PathType "User"
+        }
+
+        Write-Host ""
+        Write-Host "TIP: Run as Administrator to add to Machine PATH (available to all users)" -ForegroundColor Cyan
     }
     
     # Broadcast the environment changes

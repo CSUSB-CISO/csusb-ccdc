@@ -473,7 +473,7 @@ foreach ($proc in $allTcpProcesses) {
                 Connections = $connCount
                 CPU = $processInfo.CPU
                 Memory = [math]::Round(($processInfo.WorkingSet / 1MB), 2)
-                User = (Get-WmiObject -Class Win32_Process -Filter "ProcessId = '$processId'").GetOwner().User
+                User = (Get-CimInstance -ClassName Win32_Process -Filter "ProcessId = '$processId'" | Invoke-CimMethod -MethodName GetOwner).User
             }
         }
     }
@@ -495,7 +495,7 @@ foreach ($proc in $allUdpProcesses) {
                 Connections = $connCount
                 CPU = $processInfo.CPU
                 Memory = [math]::Round(($processInfo.WorkingSet / 1MB), 2)
-                User = (Get-WmiObject -Class Win32_Process -Filter "ProcessId = '$processId'").GetOwner().User
+                User = (Get-CimInstance -ClassName Win32_Process -Filter "ProcessId = '$processId'" | Invoke-CimMethod -MethodName GetOwner).User
             }
         }
     }
@@ -723,7 +723,7 @@ Write-Output ""
 Print-Header "SMB SHARES ANALYSIS"
 
 Print-SubHeader "Shared Folders"
-$shares = Get-WmiObject -Class Win32_Share | Where-Object { $_.Name -notmatch '^\w\$' }
+$shares = Get-CimInstance -ClassName Win32_Share | Where-Object { $_.Name -notmatch '^\w\$' }
 
 foreach ($share in $shares) {
     $shareName = $share.Name
@@ -830,24 +830,21 @@ $securityConcerns += if ((Get-Service | Where-Object { $_.DisplayName -match "Re
 $securityConcerns += if ((Get-NetFirewallProfile | Where-Object { -not $_.Enabled })) { 2 } else { 0 }
 
 # Add a flag specifically for high-port DNS concerns
-$dnsHighPortConcern = $false
 $dnsProcesses = Get-Process -Name dns -ErrorAction SilentlyContinue
 if ($dnsProcesses) {
     $dnsProcessIds = $dnsProcesses.Id
-    $dnsExternalPorts = $listeningPorts | Where-Object { 
-        $_.OwningProcess -in $dnsProcessIds -and 
+    $dnsExternalPorts = $listeningPorts | Where-Object {
+        $_.OwningProcess -in $dnsProcessIds -and
         ($_.LocalAddress -eq "0.0.0.0" -or $_.LocalAddress -eq "::") -and
         $_.LocalPort -gt 50000
     } | Measure-Object | Select-Object -ExpandProperty Count
-    
+
     if ($dnsExternalPorts -gt 50) {
         Write-Output ""
         Write-Output "NOTE: High number of ephemeral DNS ports detected ($dnsExternalPorts ports)" -ForegroundColor Cyan
         Write-Output "This is often normal behavior for busy DNS servers, but you may want to check for DNS" -ForegroundColor Cyan
         Write-Output "amplification attack potential by reviewing your DNS configuration." -ForegroundColor Cyan
         Write-Output ""
-        
-        $dnsHighPortConcern = $true
     }
 }
 

@@ -80,7 +80,15 @@ function Write-SecurityLog {
     Set-AuditPolicy
 #>
 function Set-AuditPolicy {
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
+    param()
+
     Write-Verbose "Configuring audit policies..."
+
+    if (-not $PSCmdlet.ShouldProcess("System Audit Policies", "Configure comprehensive audit policies")) {
+        return
+    }
+
     try {
         $categories = @(
             "Account Logon", "Account Management", "DS Access",
@@ -119,10 +127,15 @@ function Set-AuditPolicy {
     Set-ZerologonMitigation
 #>
 function Set-ZerologonMitigation {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
     param()
+
     Write-Verbose "Configuring Zerologon mitigations..." -Verbose
-    
+
+    if (-not $PSCmdlet.ShouldProcess("Zerologon Mitigation Registry and Scheduled Tasks", "Configure Zerologon protections")) {
+        return
+    }
+
     try {
         # Registry path for Netlogon parameters
         $registryPath = "HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters"
@@ -385,15 +398,14 @@ function Enable-SecureSMB {
     Write-Verbose "Enabling secure SMB..." -Verbose
     try {
         # Replace Get-WmiObject with Get-CimInstance
-        If ($PSVersionTable.PSVersion -ge [version]"3.0") { 
-            $OSWMI = Get-CimInstance -ClassName Win32_OperatingSystem -Property Caption,Version 
-        } Else { 
+        If ($PSVersionTable.PSVersion -ge [version]"3.0") {
+            $OSWMI = Get-CimInstance -ClassName Win32_OperatingSystem -Property Caption,Version
+        } Else {
             Write-Warning "PowerShell version < 3.0 detected. Some features may not work as expected."
             return
         }
-        
+
         $OSVer = [version]$OSWMI.Version
-        $OSName = $OSWMI.Caption
 
         if ($OSVer -ge [version]"6.2") { 
             Set-SmbServerConfiguration -EnableSMB2Protocol $true -Force 
@@ -472,7 +484,15 @@ function Ensure-PolicyFileEditor {
     Set-GroupPolicies
 #>
 function Set-GroupPolicies() {
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
+    param()
+
     Write-Host "Applying hardening Group Policy settings..." -ForegroundColor Gray
+
+    if (-not $PSCmdlet.ShouldProcess("Group Policy Registry Settings", "Apply security hardening policies")) {
+        return
+    }
+
     try {
         # === USER ACCOUNT CONTROL (UAC) Settings ===
         # Enable UAC overall
@@ -839,10 +859,15 @@ function Disable-AnonymousLDAP {
     Set-SecurityRegistry
 #>
 function Set-SecurityRegistry {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
     param()
+
     Write-Verbose "Configuring security registry settings..." -Verbose
-    
+
+    if (-not $PSCmdlet.ShouldProcess("System Security Registry Settings", "Configure comprehensive security registry values")) {
+        return
+    }
+
     # Check if machine is a Domain Controller and disable vulnerable Netlogon connections
     try {
         # Replace Get-WmiObject with Get-CimInstance
@@ -969,9 +994,15 @@ function Set-SecurityRegistry {
     Set-LocalAccounts
 #>
 function Set-LocalAccounts {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
     param()
+
     Write-Verbose "Configuring local accounts..." -Verbose
+
+    if (-not $PSCmdlet.ShouldProcess("Local User Accounts", "Reset passwords for all non-excluded local accounts")) {
+        return
+    }
+
     try {
         # Define accounts to exclude from password changes
         $excludedAccounts = @(
@@ -1176,9 +1207,14 @@ function Set-TechnicalAccount {
     Invoke-SecurityHardening
 #>
 function Invoke-SecurityHardening {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
     param()
-    
+
+    if (-not $PSCmdlet.ShouldProcess("Windows System Security", "Execute comprehensive security hardening")) {
+        Write-Host "Security hardening cancelled by user." -ForegroundColor Yellow
+        return
+    }
+
     Show-SecurityBanner
     Initialize-SecurityDirectory
     
@@ -1206,7 +1242,8 @@ function Invoke-SecurityHardening {
     foreach ($component in $components) {
         Write-Verbose "`nExecuting: $($component.Description)" -Verbose
         try {
-            & $component.Name
+            # Pass WhatIf and Confirm preferences to child functions
+            & $component.Name -WhatIf:$WhatIfPreference -Confirm:$false
         }
         catch {
             Write-SecurityLog -Component "MainExecution" -Message "Failed to execute $($component.Name): $_" -Level Error

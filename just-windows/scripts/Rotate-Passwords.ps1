@@ -15,7 +15,7 @@ param (
 
 
 function Invoke-ADPasswordRotation {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
     param (
         [Parameter()]
         [int]$PasswordLength = 16,
@@ -134,20 +134,30 @@ function Invoke-ADPasswordRotation {
                 try {
                     # Unlock account if needed and specified
                     if ($UnlockAccounts -and $user.LockedOut) {
-                        Unlock-ADAccount -Identity $user.SamAccountName
-                        Write-Host "Unlocked account for $($user.SamAccountName)" -ForegroundColor Yellow
+                        if ($PSCmdlet.ShouldProcess($user.SamAccountName, "Unlock account")) {
+                            Unlock-ADAccount -Identity $user.SamAccountName
+                            Write-Host "Unlocked account for $($user.SamAccountName)" -ForegroundColor Yellow
+                        }
                     }
-                    
+
                     # Generate new password
                     $newPassword = New-SecureRandomPassword -Length $PasswordLength
                     $securePassword = ConvertTo-SecureString -String $newPassword -AsPlainText -Force
-                    
-                    # Set new password
-                    Set-ADAccountPassword -Identity $user.SamAccountName -NewPassword $securePassword -Reset
-                    
-                    # Force password change at next logon if specified
-                    if ($ForceChangeAtLogon) {
-                        Set-ADUser -Identity $user.SamAccountName -ChangePasswordAtLogon $true
+
+                    # Set new password (ShouldProcess check)
+                    if ($PSCmdlet.ShouldProcess($user.SamAccountName, "Reset password to randomly generated value")) {
+                        Set-ADAccountPassword -Identity $user.SamAccountName -NewPassword $securePassword -Reset
+
+                        # Force password change at next logon if specified
+                        if ($ForceChangeAtLogon) {
+                            Set-ADUser -Identity $user.SamAccountName -ChangePasswordAtLogon $true
+                        }
+                    } else {
+                        # User chose not to proceed with this password reset
+                        Write-Host "[$currentUser/$($users.Count)] Skipped password reset for $($user.SamAccountName)" -ForegroundColor Yellow
+                        Remove-Variable -Name newPassword -ErrorAction SilentlyContinue
+                        Remove-Variable -Name securePassword -ErrorAction SilentlyContinue
+                        continue
                     }
                     
                     # Record success
@@ -221,16 +231,18 @@ function Invoke-ADPasswordRotation {
 
         # Encrypt the output file if requested
         if ($EncryptOutput -and $stats.Succeeded -gt 0) {
-            $encryptedFile = "$OutputFile.secure"
-            $bytes = [System.Text.Encoding]::UTF8.GetBytes((Get-Content -Path $OutputFile -Raw))
-            $protectedBytes = [System.Security.Cryptography.ProtectedData]::Protect(
-                $bytes, 
-                $null, 
-                [System.Security.Cryptography.DataProtectionScope]::CurrentUser
-            )
-            [System.IO.File]::WriteAllBytes($encryptedFile, $protectedBytes)
-            Remove-Item -Path $OutputFile -Force
-            Write-Host "Output file encrypted to: $encryptedFile" -ForegroundColor Green
+            if ($PSCmdlet.ShouldProcess($OutputFile, "Encrypt password file and delete plaintext version")) {
+                $encryptedFile = "$OutputFile.secure"
+                $bytes = [System.Text.Encoding]::UTF8.GetBytes((Get-Content -Path $OutputFile -Raw))
+                $protectedBytes = [System.Security.Cryptography.ProtectedData]::Protect(
+                    $bytes,
+                    $null,
+                    [System.Security.Cryptography.DataProtectionScope]::CurrentUser
+                )
+                [System.IO.File]::WriteAllBytes($encryptedFile, $protectedBytes)
+                Remove-Item -Path $OutputFile -Force
+                Write-Host "Output file encrypted to: $encryptedFile" -ForegroundColor Green
+            }
         }
 
         # Stop transcript

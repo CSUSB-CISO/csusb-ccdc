@@ -88,6 +88,49 @@ help recipe="":
             Write-Host ''
             Write-Host 'EXAMPLES:' -ForegroundColor Green
             Write-Host '  just harden  # Run the full hardening script'
+        } elseif ('{{recipe}}' -eq 'diff') {
+            Write-Host 'USAGE: just diff [category]' -ForegroundColor Yellow
+            Write-Host ''
+            Write-Host 'DESCRIPTION:' -ForegroundColor Green
+            Write-Host 'Compare current Windows system state with backup baseline.'
+            Write-Host 'Quickly identify changes to detect persistence, backdoors, or unauthorized modifications.'
+            Write-Host 'Critical for CCDC incident response and compromise detection.'
+            Write-Host ''
+            Write-Host 'AVAILABLE DIFF COMMANDS:' -ForegroundColor Green
+            Write-Host '  just diff                 - Diff ALL categories (comprehensive)'
+            Write-Host '  just diff-ports           - Compare listening ports'
+            Write-Host '  just diff-connections     - Compare network connections'
+            Write-Host '  just diff-processes       - Compare running processes'
+            Write-Host '  just diff-services        - Compare Windows services'
+            Write-Host '  just diff-users           - Compare local user accounts'
+            Write-Host '  just diff-registry        - Compare CCDC-relevant registry keys (CRITICAL)'
+            Write-Host '  just diff-tasks           - Compare scheduled tasks'
+            Write-Host '  just diff-shares          - Compare network shares'
+            Write-Host '  just diff-firewall        - Compare firewall rules'
+            Write-Host ''
+            Write-Host 'CRITICAL REGISTRY KEYS MONITORED:' -ForegroundColor Yellow
+            Write-Host '  - Run/RunOnce keys (persistence)'
+            Write-Host '  - Services registry'
+            Write-Host '  - Winlogon (persistence)'
+            Write-Host '  - Image File Execution Options (IFEO debugger persistence)'
+            Write-Host '  - AppInit_DLLs (persistence)'
+            Write-Host '  - LSA authentication settings'
+            Write-Host '  - Windows Defender exclusions'
+            Write-Host '  - Firewall policy'
+            Write-Host '  - Print Monitors, Time Providers, WMI (persistence vectors)'
+            Write-Host '  - Terminal Server/RDP settings'
+            Write-Host '  - UAC settings'
+            Write-Host ''
+            Write-Host 'WORKFLOW:' -ForegroundColor Green
+            Write-Host '  1. Run: just backup         # Create baseline'
+            Write-Host '  2. Wait for competition activity...'
+            Write-Host '  3. Run: just diff           # Check for changes'
+            Write-Host '  4. Run: just diff-registry  # Focus on persistence'
+            Write-Host ''
+            Write-Host 'EXAMPLES:' -ForegroundColor Green
+            Write-Host '  just diff                   # Check all changes'
+            Write-Host '  just diff-registry          # Check for persistence mechanisms'
+            Write-Host '  just diff-ports             # Check for new listening services'
         } else {
             Write-Host 'USAGE: just {{recipe}}' -ForegroundColor Yellow
             Write-Host ''
@@ -394,4 +437,125 @@ ps-version:
         $psver += " Desktop"
     }
     Write-Host "PowerShell $psver" -ForegroundColor Cyan
+
+# Diff all system state against backup
+diff:
+    #!{{shebang}}
+    Write-Host '===== System State Diff: ALL =====' -ForegroundColor Cyan
+    $env:KK_BASE_DIR = '{{base_dir}}'
+    $env:KK_BACKUP_DIR = '{{backup_dir}}'
+    $env:KK_LOG_DIR = '{{log_dir}}'
+    & {{scripts_dir}}/Invoke-Diff.ps1 -Target all -Verbose
+
+# Diff listening ports
+diff-ports:
+    #!{{shebang}}
+    Write-Host '===== System State Diff: PORTS =====' -ForegroundColor Cyan
+    $env:KK_BASE_DIR = '{{base_dir}}'
+    $env:KK_BACKUP_DIR = '{{backup_dir}}'
+    $env:KK_LOG_DIR = '{{log_dir}}'
+    & {{scripts_dir}}/Invoke-Diff.ps1 -Target ports -Verbose
+
+# Diff network connections
+diff-connections:
+    #!{{shebang}}
+    Write-Host '===== System State Diff: CONNECTIONS =====' -ForegroundColor Cyan
+    $env:KK_BASE_DIR = '{{base_dir}}'
+    $env:KK_BACKUP_DIR = '{{backup_dir}}'
+    $env:KK_LOG_DIR = '{{log_dir}}'
+    & {{scripts_dir}}/Invoke-Diff.ps1 -Target connections -Verbose
+
+# Diff running processes
+diff-processes:
+    #!{{shebang}}
+    Write-Host '===== System State Diff: PROCESSES =====' -ForegroundColor Cyan
+    $env:KK_BASE_DIR = '{{base_dir}}'
+    $env:KK_BACKUP_DIR = '{{backup_dir}}'
+    $env:KK_LOG_DIR = '{{log_dir}}'
+    & {{scripts_dir}}/Invoke-Diff.ps1 -Target processes -Verbose
+
+# Diff services
+diff-services:
+    #!{{shebang}}
+    Write-Host '===== System State Diff: SERVICES =====' -ForegroundColor Cyan
+    $env:KK_BASE_DIR = '{{base_dir}}'
+    $env:KK_BACKUP_DIR = '{{backup_dir}}'
+    $env:KK_LOG_DIR = '{{log_dir}}'
+    & {{scripts_dir}}/Invoke-Diff.ps1 -Target services -Verbose
+
+# Diff local users
+diff-users:
+    #!{{shebang}}
+    Write-Host '===== System State Diff: USERS =====' -ForegroundColor Cyan
+    $env:KK_BASE_DIR = '{{base_dir}}'
+    $env:KK_BACKUP_DIR = '{{backup_dir}}'
+    $env:KK_LOG_DIR = '{{log_dir}}'
+    & {{scripts_dir}}/Invoke-Diff.ps1 -Target users -Verbose
+
+# Diff CCDC-relevant registry keys (CRITICAL for persistence detection)
+diff-registry:
+    #!{{shebang}}
+    Write-Host '===== System State Diff: REGISTRY (CCDC CRITICAL) =====' -ForegroundColor Cyan
+    $env:KK_BASE_DIR = '{{base_dir}}'
+    $env:KK_BACKUP_DIR = '{{backup_dir}}'
+    $env:KK_LOG_DIR = '{{log_dir}}'
+    & {{scripts_dir}}/Invoke-Diff.ps1 -Target registry -Verbose
+
+# Diff scheduled tasks
+diff-tasks:
+    #!{{shebang}}
+    Write-Host '===== System State Diff: SCHEDULED TASKS =====' -ForegroundColor Cyan
+    $env:KK_BASE_DIR = '{{base_dir}}'
+    $env:KK_BACKUP_DIR = '{{backup_dir}}'
+    $env:KK_LOG_DIR = '{{log_dir}}'
+    & {{scripts_dir}}/Invoke-Diff.ps1 -Target tasks -Verbose
+
+# Diff network shares
+diff-shares:
+    #!{{shebang}}
+    Write-Host '===== System State Diff: NETWORK SHARES =====' -ForegroundColor Cyan
+    $env:KK_BASE_DIR = '{{base_dir}}'
+    $env:KK_BACKUP_DIR = '{{backup_dir}}'
+    $env:KK_LOG_DIR = '{{log_dir}}'
+    & {{scripts_dir}}/Invoke-Diff.ps1 -Target shares -Verbose
+
+# Diff firewall rules
+diff-firewall:
+    #!{{shebang}}
+    Write-Host '===== System State Diff: FIREWALL RULES =====' -ForegroundColor Cyan
+    $env:KK_BASE_DIR = '{{base_dir}}'
+    $env:KK_BACKUP_DIR = '{{backup_dir}}'
+    $env:KK_LOG_DIR = '{{log_dir}}'
+    & {{scripts_dir}}/Invoke-Diff.ps1 -Target firewall -Verbose
+
+# NOTE: install-sysinternals is deprecated - use install-tools instead
+# Install Sysinternals Suite for CCDC toolkit (DEPRECATED - use install-tools)
+install-sysinternals:
+    #!{{shebang}}
+    Write-Host 'WARNING: install-sysinternals is deprecated' -ForegroundColor Yellow
+    Write-Host 'Please use: just install-tools' -ForegroundColor Yellow
+    Write-Host 'This command now redirects to install-tools...' -ForegroundColor Yellow
+    Write-Host ''
+    & {{scripts_dir}}/Install-Tools.ps1
+
+# Check for persistence mechanisms and backdoors using Sysinternals Autoruns
+check-persistence:
+    #!{{shebang}}
+    Write-Host '===== Persistence Detection (Sysinternals Autoruns) =====' -ForegroundColor Cyan
+    $env:KK_BASE_DIR = '{{base_dir}}'
+    $env:KK_BACKUP_DIR = '{{backup_dir}}'
+    $env:KK_LOG_DIR = '{{log_dir}}'
+    $env:KK_TOOLS_DIR = '{{tools_dir}}/sysinternals'
+    & {{scripts_dir}}/Invoke-PersistenceCheck.ps1 -Verbose
+
+# Check for persistence with VirusTotal hash lookup
+check-persistence-vt:
+    #!{{shebang}}
+    Write-Host '===== Persistence Detection with VirusTotal =====' -ForegroundColor Cyan
+    Write-Host 'WARNING: This may be slow due to VirusTotal API limits' -ForegroundColor Yellow
+    $env:KK_BASE_DIR = '{{base_dir}}'
+    $env:KK_BACKUP_DIR = '{{backup_dir}}'
+    $env:KK_LOG_DIR = '{{log_dir}}'
+    $env:KK_TOOLS_DIR = '{{tools_dir}}/sysinternals'
+    & {{scripts_dir}}/Invoke-PersistenceCheck.ps1 -VirusTotalCheck -Verbose
 

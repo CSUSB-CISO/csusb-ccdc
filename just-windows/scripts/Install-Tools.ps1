@@ -231,6 +231,188 @@ public static extern IntPtr SendMessageTimeout(
     Write-Host "Environment variables refreshed system-wide" -ForegroundColor Green
 }
 
+# Sysinternals Suite installation
+function Install-SysinternalsSuite {
+    param (
+        [switch]$FullSuite
+    )
+
+    $sysinternalsDir = Join-Path -Path $InstallDir -ChildPath "Sysinternals"
+
+    if (-not (Test-Path -Path $sysinternalsDir)) {
+        New-Item -ItemType Directory -Path $sysinternalsDir | Out-Null
+    }
+
+    $sysinternalsLiveUrl = "https://live.sysinternals.com"
+
+    # Essential tools for CCDC
+    $essentialTools = @(
+        "autorunsc64.exe",  # Persistence detection
+        "sysmon64.exe",     # System monitoring
+        "pslist.exe",       # Process listing
+        "psloglist.exe",    # Event log extraction
+        "handle.exe",       # Handle enumeration
+        "tcpvcon.exe",      # TCP/UDP connections
+        "sigcheck.exe",     # File signatures and VirusTotal
+        "procdump.exe",     # Process memory dumps
+        "psservice.exe",    # Service management
+        "procexp64.exe",    # Process Explorer
+        "strings.exe",      # String extraction
+        "accesschk.exe",    # Access permissions check
+        "PsExec.exe",       # Remote execution
+        "psinfo.exe",       # System information
+        "psfile.exe"        # File/share info
+    )
+
+    Write-Host "Installing Sysinternals tools..." -ForegroundColor Cyan
+
+    if ($FullSuite) {
+        # Download entire suite
+        Write-Host "Downloading full Sysinternals Suite..." -ForegroundColor Cyan
+        $suiteZip = Join-Path -Path $env:TEMP -ChildPath "SysinternalsSuite.zip"
+        $suiteUrl = "https://download.sysinternals.com/files/SysinternalsSuite.zip"
+
+        try {
+            Invoke-WebRequest -Uri $suiteUrl -OutFile $suiteZip -ErrorAction Stop
+            Expand-Archive -Path $suiteZip -DestinationPath $sysinternalsDir -Force
+            Remove-Item -Path $suiteZip -Force
+            Write-Host "Sysinternals Suite extracted successfully." -ForegroundColor Green
+        } catch {
+            Write-Warning "Failed to download suite, falling back to individual tools"
+            $FullSuite = $false
+        }
+    }
+
+    if (-not $FullSuite) {
+        # Download individual essential tools
+        $successCount = 0
+        $failCount = 0
+
+        foreach ($tool in $essentialTools) {
+            $toolPath = Join-Path -Path $sysinternalsDir -ChildPath $tool
+
+            if (Test-Path $toolPath) {
+                Write-Host "  $tool - already exists" -ForegroundColor Gray
+                $successCount++
+                continue
+            }
+
+            $url = "$sysinternalsLiveUrl/$tool"
+
+            try {
+                Invoke-WebRequest -Uri $url -OutFile $toolPath -ErrorAction Stop
+                Write-Host "  $tool - downloaded" -ForegroundColor Green
+                $successCount++
+            } catch {
+                Write-Warning "  $tool - failed to download"
+                $failCount++
+            }
+        }
+
+        Write-Host "`nSysinternals installation summary:" -ForegroundColor Cyan
+        Write-Host "  Success: $successCount" -ForegroundColor Green
+        Write-Host "  Failed: $failCount" -ForegroundColor Red
+    }
+
+    # Add Sysinternals directory to PATH
+    Add-DirectoryToPath -Directory $sysinternalsDir
+
+    Write-Host "Sysinternals tools installed to: $sysinternalsDir" -ForegroundColor Green
+}
+
+# Sysmon installation with default configuration
+function Install-Sysmon {
+    param (
+        [string]$ConfigUrl = "https://raw.githubusercontent.com/SwiftOnSecurity/sysmon-config/master/sysmonconfig-export.xml"
+    )
+
+    Write-Host "`nInstalling Sysmon for real-time system monitoring..." -ForegroundColor Cyan
+
+    $sysinternalsDir = Join-Path -Path $InstallDir -ChildPath "Sysinternals"
+    $sysmonPath = Join-Path -Path $sysinternalsDir -ChildPath "sysmon64.exe"
+    $configPath = Join-Path -Path $sysinternalsDir -ChildPath "sysmonconfig.xml"
+
+    # Check if Sysmon is already installed
+    $sysmonService = Get-Service -Name "Sysmon64" -ErrorAction SilentlyContinue
+    if ($sysmonService) {
+        Write-Host "Sysmon is already installed. Updating configuration..." -ForegroundColor Yellow
+
+        # Download latest config
+        try {
+            Write-Host "Downloading SwiftOnSecurity Sysmon configuration..." -ForegroundColor Cyan
+            Invoke-WebRequest -Uri $ConfigUrl -OutFile $configPath -ErrorAction Stop
+
+            # Update Sysmon config
+            & $sysmonPath -c $configPath -accepteula
+            Write-Host "Sysmon configuration updated successfully." -ForegroundColor Green
+        } catch {
+            Write-Warning "Failed to update Sysmon configuration: $_"
+        }
+        return
+    }
+
+    # Ensure Sysmon binary exists
+    if (-not (Test-Path $sysmonPath)) {
+        Write-Warning "Sysmon64.exe not found. Please run Install-SysinternalsSuite first."
+        return
+    }
+
+    # Download Sysmon configuration
+    try {
+        Write-Host "Downloading SwiftOnSecurity Sysmon configuration..." -ForegroundColor Cyan
+        Write-Host "Source: $ConfigUrl" -ForegroundColor Gray
+        Invoke-WebRequest -Uri $ConfigUrl -OutFile $configPath -ErrorAction Stop
+        Write-Host "Configuration downloaded successfully." -ForegroundColor Green
+    } catch {
+        Write-Error "Failed to download Sysmon configuration: $_"
+        Write-Host "Attempting to install Sysmon with default configuration..." -ForegroundColor Yellow
+        $configPath = $null
+    }
+
+    # Install Sysmon
+    Write-Host "Installing Sysmon64 service..." -ForegroundColor Cyan
+
+    try {
+        if ($configPath -and (Test-Path $configPath)) {
+            & $sysmonPath -accepteula -i $configPath
+        } else {
+            & $sysmonPath -accepteula -i
+        }
+
+        # Verify installation
+        Start-Sleep -Seconds 2
+        $sysmonService = Get-Service -Name "Sysmon64" -ErrorAction SilentlyContinue
+
+        if ($sysmonService -and $sysmonService.Status -eq "Running") {
+            Write-Host "`nSysmon installed and running successfully!" -ForegroundColor Green
+            Write-Host "Event Log: Microsoft-Windows-Sysmon/Operational" -ForegroundColor Cyan
+            Write-Host "Configuration: $configPath" -ForegroundColor Cyan
+
+            # Show what Sysmon monitors
+            Write-Host "`nSysmon is now monitoring:" -ForegroundColor Yellow
+            Write-Host "  - Process creation (Event ID 1)" -ForegroundColor White
+            Write-Host "  - Network connections (Event ID 3)" -ForegroundColor White
+            Write-Host "  - Process termination (Event ID 5)" -ForegroundColor White
+            Write-Host "  - Driver loads (Event ID 6)" -ForegroundColor White
+            Write-Host "  - Image loads (Event ID 7)" -ForegroundColor White
+            Write-Host "  - File creation (Event ID 11)" -ForegroundColor White
+            Write-Host "  - Registry modifications (Event ID 12, 13, 14)" -ForegroundColor White
+            Write-Host "  - Named pipe events (Event ID 17, 18)" -ForegroundColor White
+            Write-Host "  - WMI events (Event ID 19, 20, 21)" -ForegroundColor White
+            Write-Host "  - DNS queries (Event ID 22)" -ForegroundColor White
+
+            # Provide usage examples
+            Write-Host "`nQuery Sysmon events:" -ForegroundColor Cyan
+            Write-Host "  Get-WinEvent -LogName 'Microsoft-Windows-Sysmon/Operational' -MaxEvents 100" -ForegroundColor Gray
+            Write-Host "  Get-WinEvent -FilterHashtable @{LogName='Microsoft-Windows-Sysmon/Operational'; ID=1} -MaxEvents 50" -ForegroundColor Gray
+        } else {
+            Write-Error "Sysmon installation failed or service is not running"
+        }
+    } catch {
+        Write-Error "Error installing Sysmon: $_"
+    }
+}
+
 # Main installation process
 Write-Host "Starting installation of security tools..." -ForegroundColor Magenta
 
@@ -242,17 +424,35 @@ Install-HardeningKitty
 Install-ProcessExplorer
 Install-TCPView
 
+# Install Sysinternals Suite (essential tools)
+Install-SysinternalsSuite
+
+# Install Sysmon for real-time monitoring
+Install-Sysmon
+
 # Add the installation directory to PATH
 Add-DirectoryToPath -Directory $InstallDir
-
-# No need to add subdirectories separately, as we're adding the specific paths
-# in each tool's installation function now
-
 
 # Broadcast the environment changes to all Windows processes
 Update-SessionEnvironment
 
-Write-Host "Installation complete!" -ForegroundColor Magenta
+Write-Host "`n=== Installation Complete ===" -ForegroundColor Magenta
 Write-Host "All tools have been installed to $InstallDir and added to PATH." -ForegroundColor Green
 Write-Host "The PATH has been updated in the current session and broadcast to other applications." -ForegroundColor Green
+
+# Summary of installed components
+Write-Host "`n=== Installed Components ===" -ForegroundColor Cyan
+Write-Host "  - Autoruns (GUI)" -ForegroundColor White
+Write-Host "  - Chainsaw (log analysis)" -ForegroundColor White
+Write-Host "  - HardeningKitty (PowerShell module)" -ForegroundColor White
+Write-Host "  - Process Explorer" -ForegroundColor White
+Write-Host "  - TCPView" -ForegroundColor White
+Write-Host "  - Sysinternals Suite (15+ tools)" -ForegroundColor White
+Write-Host "  - Sysmon64 (real-time monitoring)" -ForegroundColor White
+
+Write-Host "`n=== Quick Start Commands ===" -ForegroundColor Cyan
+Write-Host "  just check-persistence         # Detect backdoors/persistence" -ForegroundColor Gray
+Write-Host "  just backup                    # Create baseline" -ForegroundColor Gray
+Write-Host "  just diff                      # Check all changes" -ForegroundColor Gray
+Write-Host "  autorunsc64 -accepteula -a *   # Manual persistence scan" -ForegroundColor Gray
 

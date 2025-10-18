@@ -501,7 +501,9 @@ try {
         Id = 4625
         StartTime = $StartTime
     } -ErrorAction SilentlyContinue).Count
-} catch {}
+} catch {
+    Write-Verbose "Could not retrieve authentication failure count: $_"
+}
 Write-LogOutput "Authentication failures: $authFailureCount" -ForegroundColor Yellow
 
 # Count successful logins
@@ -515,7 +517,9 @@ try {
         $_.Properties[8].Value -eq 2 -or  # Interactive login
         $_.Properties[8].Value -eq 10      # Remote interactive login
     }).Count
-} catch {}
+} catch {
+    Write-Verbose "Could not retrieve successful login count: $_"
+}
 Write-LogOutput "Successful (interactive) logins: $successLoginCount" -ForegroundColor Yellow
 
 # Count system errors
@@ -526,7 +530,9 @@ try {
         Level = 1,2  # Critical (1) and Error (2)
         StartTime = $StartTime
     } -ErrorAction SilentlyContinue).Count
-} catch {}
+} catch {
+    Write-Verbose "Could not retrieve system error count: $_"
+}
 Write-LogOutput "System errors: $systemErrorCount" -ForegroundColor Yellow
 
 # Check for suspicious activity indicators
@@ -539,7 +545,9 @@ try {
         Id = 4740  # Account lockout
         StartTime = $StartTime
     } -ErrorAction SilentlyContinue).Count
-} catch {}
+} catch {
+    Write-Verbose "Could not retrieve account lockout count: $_"
+}
 
 Write-LogOutput ""
 

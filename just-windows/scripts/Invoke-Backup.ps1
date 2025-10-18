@@ -218,26 +218,384 @@ class BackupSystem {
     [void] PerformSystemDump() {
         $dumpDir = Join-Path $this.BackupPath "system_info"
         $this.EnsureDirectory($dumpDir)
-        
+
         $this.WriteLog("INFO", "Creating system information snapshot in $dumpDir")
-        
+
         # Common system information to gather
         Get-CimInstance Win32_OperatingSystem | Out-File -FilePath "$dumpDir\os_info.txt"
         Get-Volume | Out-File -FilePath "$dumpDir\disk_usage.txt"
         Get-PSDrive | Out-File -FilePath "$dumpDir\psdrive_info.txt"
         Get-NetAdapter | Out-File -FilePath "$dumpDir\network_adapters.txt"
         Get-NetIPAddress | Out-File -FilePath "$dumpDir\ip_addresses.txt"
-        Get-Process | Out-File -FilePath "$dumpDir\processes.txt"
-        Get-LocalUser | Out-File -FilePath "$dumpDir\local_users.txt"
-        Get-Service | Out-File -FilePath "$dumpDir\service_status.txt"
-        
+
+        # Processes (for diff)
+        Get-Process | Select-Object Name, Id, Path, Company | Sort-Object Name |
+            Out-File -FilePath "$dumpDir\processes.txt"
+
+        # Users (for diff)
+        Get-LocalUser | Select-Object Name, Enabled, LastLogon, PasswordLastSet |
+            Out-File -FilePath "$dumpDir\local_users.txt"
+
+        # Services (for diff)
+        Get-Service | Select-Object Name, DisplayName, Status, StartType | Sort-Object Name |
+            Out-File -FilePath "$dumpDir\active_services.txt"
+
+        Get-CimInstance Win32_Service | Select-Object Name, PathName, StartMode, State, StartName |
+            Sort-Object Name |
+            Out-File -FilePath "$dumpDir\service_details.txt"
+
+        # Network ports (for diff)
+        $this.WriteLog("INFO", "Capturing listening ports")
+        Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue |
+            Select-Object LocalAddress, LocalPort, OwningProcess, State |
+            Sort-Object LocalPort |
+            Out-File -FilePath "$dumpDir\listening_ports.txt"
+
+        # Network connections (for diff)
+        $this.WriteLog("INFO", "Capturing network connections")
+        Get-NetTCPConnection -ErrorAction SilentlyContinue |
+            Select-Object LocalAddress, LocalPort, RemoteAddress, RemotePort, State, OwningProcess |
+            Sort-Object State, RemoteAddress |
+            Out-File -FilePath "$dumpDir\network_connections.txt"
+
+        # Scheduled tasks (for diff)
+        $this.WriteLog("INFO", "Capturing scheduled tasks")
+        Get-ScheduledTask | Where-Object { $_.State -ne "Disabled" } |
+            Select-Object TaskName, TaskPath, State |
+            Sort-Object TaskPath, TaskName |
+            Out-File -FilePath "$dumpDir\scheduled_tasks.txt"
+
+        # Network shares (for diff)
+        $this.WriteLog("INFO", "Capturing network shares")
+        Get-SmbShare -ErrorAction SilentlyContinue |
+            Select-Object Name, Path, Description |
+            Sort-Object Name |
+            Out-File -FilePath "$dumpDir\network_shares.txt"
+
+        # Firewall rules (for diff)
+        $this.WriteLog("INFO", "Capturing firewall rules")
+        Get-NetFirewallRule | Where-Object { $_.Enabled -eq $true } |
+            Select-Object Name, DisplayName, Direction, Action, Enabled |
+            Sort-Object Direction, Name |
+            Out-File -FilePath "$dumpDir\firewall_rules.txt"
+
+        # Registry snapshot for diff (CCDC-relevant keys)
+        $this.WriteLog("INFO", "Exporting critical registry keys")
+        $this.ExportRegistrySnapshot("$dumpDir\registry_snapshot.txt")
+
         # Installed software
-        Get-WmiObject -Class Win32_Product | Select-Object Name, Version, Vendor | 
+        Get-CimInstance -ClassName Win32_Product | Select-Object Name, Version, Vendor |
             Out-File -FilePath "$dumpDir\installed_software.txt"
-            
+
+        # Logged in users
+        query user 2>$null | Out-File -FilePath "$dumpDir\logged_users.txt" -ErrorAction SilentlyContinue
+
+        # Additional forensic data collection (matching Linux depth)
+        $this.CollectForensicData($dumpDir)
+
         # Create a system snapshot timestamp
         Get-Date | Out-File -FilePath "$dumpDir\snapshot_time.txt"
         $this.WriteLog("INFO", "System information snapshot completed")
+    }
+
+    # Method to collect deep forensic data (Windows equivalent of Linux security backup)
+    [void] CollectForensicData([string]$dumpDir) {
+        $this.WriteLog("INFO", "Collecting forensic and security data")
+
+        # 1. FILE INTEGRITY - System32 and SysWOW64 binary checksums (rootkit detection)
+        $this.WriteLog("INFO", "Computing checksums of critical Windows binaries")
+        $binaryDirs = @("C:\Windows\System32", "C:\Windows\SysWOW64")
+        $checksumFile = "$dumpDir\binary_checksums.txt"
+        "=== WINDOWS BINARY INTEGRITY HASHES ===" | Out-File -FilePath $checksumFile
+        "Generated: $(Get-Date)" | Out-File -FilePath $checksumFile -Append
+        "" | Out-File -FilePath $checksumFile -Append
+
+        foreach ($dir in $binaryDirs) {
+            if (Test-Path $dir) {
+                $this.WriteLog("INFO", "Hashing binaries in $dir")
+                "Directory: $dir" | Out-File -FilePath $checksumFile -Append
+                Get-ChildItem -Path $dir -Filter *.exe -ErrorAction SilentlyContinue |
+                    Select-Object -First 100 |
+                    ForEach-Object {
+                        try {
+                            $hash = Get-FileHash -Path $_.FullName -Algorithm SHA256 -ErrorAction Stop
+                            "$($hash.Hash)  $($_.Name)" | Out-File -FilePath $checksumFile -Append
+                        } catch {
+                            # Skip files we can't hash
+                        }
+                    }
+                "" | Out-File -FilePath $checksumFile -Append
+            }
+        }
+
+        # 2. FILE PERMISSIONS - Weak ACLs and Everyone/Users full control (Windows SUID equivalent)
+        $this.WriteLog("INFO", "Scanning for weak file permissions")
+        $weakAclsFile = "$dumpDir\weak_file_permissions.txt"
+        "=== WEAK FILE PERMISSIONS (World-Writable Equivalent) ===" | Out-File -FilePath $weakAclsFile
+        $criticalDirs = @("C:\Windows\System32", "C:\Program Files", "C:\ProgramData")
+        foreach ($dir in $criticalDirs) {
+            if (Test-Path $dir) {
+                Get-ChildItem -Path $dir -Recurse -ErrorAction SilentlyContinue |
+                    Select-Object -First 50 |
+                    ForEach-Object {
+                        try {
+                            $acl = Get-Acl -Path $_.FullName -ErrorAction Stop
+                            $weakPerms = $acl.Access | Where-Object {
+                                ($_.IdentityReference -like "*Everyone*" -or
+                                 $_.IdentityReference -like "*Users*") -and
+                                $_.FileSystemRights -like "*FullControl*"
+                            }
+                            if ($weakPerms) {
+                                "WEAK: $($_.FullName)" | Out-File -FilePath $weakAclsFile -Append
+                                $weakPerms | ForEach-Object {
+                                    "  $($_.IdentityReference): $($_.FileSystemRights)" | Out-File -FilePath $weakAclsFile -Append
+                                }
+                            }
+                        } catch {
+                            # Skip files we can't access (permissions denied is expected)
+                            $this.WriteLog("DEBUG", "Skipped file due to access denial: $($_.FullName)")
+                        }
+                    }
+            }
+        }
+
+        # 3. STARTUP PROGRAMS - All autorun locations (persistence detection)
+        $this.WriteLog("INFO", "Enumerating startup programs")
+        $startupFile = "$dumpDir\startup_programs.txt"
+        "=== STARTUP PROGRAMS (Persistence Vectors) ===" | Out-File -FilePath $startupFile
+
+        # Startup folders
+        "--- Startup Folders ---" | Out-File -FilePath $startupFile -Append
+        $startupPaths = @(
+            "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup",
+            "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup"
+        )
+        foreach ($path in $startupPaths) {
+            if (Test-Path $path) {
+                Get-ChildItem -Path $path -ErrorAction SilentlyContinue | ForEach-Object {
+                    "$($_.FullName)" | Out-File -FilePath $startupFile -Append
+                }
+            }
+        }
+
+        # 4. ENVIRONMENT VARIABLES - Check for PATH manipulation
+        $this.WriteLog("INFO", "Capturing environment variables")
+        "--- System Environment Variables ---" | Out-File -FilePath $startupFile -Append
+        [System.Environment]::GetEnvironmentVariables("Machine") | Out-String |
+            Out-File -FilePath $startupFile -Append
+
+        # 5. EVENT LOGS - Failed logins, Security events (Windows equivalent of /var/log/auth.log)
+        $this.WriteLog("INFO", "Collecting critical Event Logs")
+
+        # Failed login attempts (Event ID 4625)
+        try {
+            Get-WinEvent -FilterHashtable @{LogName='Security'; ID=4625} -MaxEvents 100 -ErrorAction Stop |
+                Select-Object TimeCreated, Message |
+                Out-File -FilePath "$dumpDir\failed_logins.txt"
+        } catch {
+            "No failed login events or insufficient permissions" | Out-File -FilePath "$dumpDir\failed_logins.txt"
+        }
+
+        # Successful logins (Event ID 4624)
+        try {
+            Get-WinEvent -FilterHashtable @{LogName='Security'; ID=4624} -MaxEvents 100 -ErrorAction Stop |
+                Select-Object TimeCreated, Message |
+                Out-File -FilePath "$dumpDir\successful_logins.txt"
+        } catch {
+            "No login events or insufficient permissions" | Out-File -FilePath "$dumpDir\successful_logins.txt"
+        }
+
+        # Account changes (Event ID 4720, 4722, 4724, 4726)
+        try {
+            $accountEvents = Get-WinEvent -FilterHashtable @{
+                LogName='Security';
+                ID=4720,4722,4724,4726
+            } -MaxEvents 50 -ErrorAction Stop
+            $accountEvents | Select-Object TimeCreated, Id, Message |
+                Out-File -FilePath "$dumpDir\account_changes.txt"
+        } catch {
+            "No account change events or insufficient permissions" | Out-File -FilePath "$dumpDir\account_changes.txt"
+        }
+
+        # Service installation (Event ID 7045 - Critical for backdoor detection)
+        try {
+            Get-WinEvent -FilterHashtable @{LogName='System'; ID=7045} -MaxEvents 50 -ErrorAction Stop |
+                Select-Object TimeCreated, Message |
+                Out-File -FilePath "$dumpDir\service_installations.txt"
+        } catch {
+            "No service installation events" | Out-File -FilePath "$dumpDir\service_installations.txt"
+        }
+
+        # 6. PASSWORD POLICY - Group Policy security settings
+        $this.WriteLog("INFO", "Capturing password and account policies")
+        net accounts | Out-File -FilePath "$dumpDir\password_policy.txt"
+
+        # Local security policy export (if secedit is available)
+        try {
+            $secpolFile = "$env:TEMP\secpol.cfg"
+            secedit /export /cfg $secpolFile /quiet
+            if (Test-Path $secpolFile) {
+                Copy-Item -Path $secpolFile -Destination "$dumpDir\security_policy.cfg" -Force
+                Remove-Item -Path $secpolFile -Force -ErrorAction SilentlyContinue
+            }
+        } catch {
+            "Could not export security policy" | Out-File -FilePath "$dumpDir\security_policy.txt"
+        }
+
+        # 7. DRIVERS - Loaded kernel-mode drivers (rootkit detection)
+        $this.WriteLog("INFO", "Enumerating loaded drivers")
+        Get-CimInstance Win32_SystemDriver |
+            Select-Object Name, DisplayName, PathName, State, StartMode, ServiceType |
+            Sort-Object State, Name |
+            Out-File -FilePath "$dumpDir\loaded_drivers.txt"
+
+        # 8. BOOT CONFIGURATION - Kernel and boot settings
+        $this.WriteLog("INFO", "Capturing boot configuration")
+        bcdedit /enum all | Out-File -FilePath "$dumpDir\boot_config.txt"
+
+        # 9. INSTALLED CERTIFICATES - Trusted root CAs (man-in-the-middle detection)
+        $this.WriteLog("INFO", "Enumerating installed certificates")
+        Get-ChildItem -Path Cert:\LocalMachine\Root -ErrorAction SilentlyContinue |
+            Select-Object Subject, Issuer, NotAfter, Thumbprint |
+            Out-File -FilePath "$dumpDir\trusted_root_certs.txt"
+
+        # 10. WMI EVENT CONSUMERS - Persistence mechanism
+        $this.WriteLog("INFO", "Checking WMI event consumers")
+        Get-CimInstance -Namespace root\subscription -ClassName __EventConsumer -ErrorAction SilentlyContinue |
+            Select-Object Name, @{N='ConsumerType';E={$_.__CLASS}} |
+            Out-File -FilePath "$dumpDir\wmi_consumers.txt"
+
+        # 11. AUTORUN ANALYSIS - Comprehensive autorun enumeration
+        $this.WriteLog("INFO", "Performing comprehensive autorun analysis")
+        $autorunFile = "$dumpDir\autorun_complete.txt"
+        "=== COMPREHENSIVE AUTORUN ANALYSIS ===" | Out-File -FilePath $autorunFile
+
+        # Check Run keys again but with values
+        $runKeys = @(
+            "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run",
+            "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce",
+            "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run",
+            "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce"
+        )
+        foreach ($key in $runKeys) {
+            if (Test-Path $key) {
+                "`n[$key]" | Out-File -FilePath $autorunFile -Append
+                Get-ItemProperty -Path $key | Format-List * | Out-File -FilePath $autorunFile -Append
+            }
+        }
+
+        # 12. CREDENTIAL MANAGER - Saved credentials
+        $this.WriteLog("INFO", "Listing saved credentials")
+        cmdkey /list | Out-File -FilePath "$dumpDir\saved_credentials.txt"
+
+        $this.WriteLog("INFO", "Forensic data collection completed")
+    }
+
+    # Method to export CCDC-relevant registry keys
+    [void] ExportRegistrySnapshot([string]$outputPath) {
+        # CCDC-relevant registry keys
+        $registryKeys = @(
+            # Run keys (persistence)
+            @{ Path = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"; Name = "HKLM Run" },
+            @{ Path = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce"; Name = "HKLM RunOnce" },
+            @{ Path = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"; Name = "HKCU Run" },
+            @{ Path = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce"; Name = "HKCU RunOnce" },
+            @{ Path = "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run"; Name = "HKLM Run (WOW6432)" },
+
+            # Services
+            @{ Path = "HKLM:\SYSTEM\CurrentControlSet\Services"; Name = "Services" },
+
+            # Winlogon (persistence)
+            @{ Path = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"; Name = "Winlogon" },
+
+            # Image File Execution Options (debugger persistence)
+            @{ Path = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options"; Name = "IFEO" },
+
+            # AppInit_DLLs (persistence)
+            @{ Path = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows"; Name = "AppInit_DLLs" },
+            @{ Path = "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion\Windows"; Name = "AppInit_DLLs (WOW6432)" },
+
+            # LSA (authentication)
+            @{ Path = "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa"; Name = "LSA" },
+
+            # Network settings
+            @{ Path = "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters"; Name = "TCP/IP Parameters" },
+
+            # Windows Defender
+            @{ Path = "HKLM:\SOFTWARE\Microsoft\Windows Defender\Exclusions\Paths"; Name = "Defender Exclusions - Paths" },
+            @{ Path = "HKLM:\SOFTWARE\Microsoft\Windows Defender\Exclusions\Extensions"; Name = "Defender Exclusions - Extensions" },
+            @{ Path = "HKLM:\SOFTWARE\Microsoft\Windows Defender\Exclusions\Processes"; Name = "Defender Exclusions - Processes" },
+
+            # Firewall
+            @{ Path = "HKLM:\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy"; Name = "Firewall Policy" },
+
+            # Safe Mode
+            @{ Path = "HKLM:\SYSTEM\CurrentControlSet\Control\SafeBoot"; Name = "Safe Boot" },
+
+            # Print Monitors (persistence)
+            @{ Path = "HKLM:\SYSTEM\CurrentControlSet\Control\Print\Monitors"; Name = "Print Monitors" },
+
+            # Time Providers (persistence)
+            @{ Path = "HKLM:\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders"; Name = "Time Providers" },
+
+            # WMI (persistence)
+            @{ Path = "HKLM:\SOFTWARE\Microsoft\Wbem\ESS"; Name = "WMI Event Subscriptions" },
+
+            # Terminal Services / RDP
+            @{ Path = "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server"; Name = "Terminal Server" },
+
+            # UAC Settings
+            @{ Path = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"; Name = "UAC/System Policies" },
+
+            # Startup folders (check all users)
+            @{ Path = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders"; Name = "Common Shell Folders" },
+            @{ Path = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"; Name = "User Shell Folders" }
+        )
+
+        $output = @()
+
+        foreach ($key in $registryKeys) {
+            $output += ""
+            $output += "=" * 80
+            $output += "Registry Key: $($key.Name)"
+            $output += "Path: $($key.Path)"
+            $output += "=" * 80
+
+            if (Test-Path $key.Path) {
+                try {
+                    $values = Get-ItemProperty -Path $key.Path -ErrorAction Stop
+
+                    # Get all properties except PS* properties
+                    $properties = $values.PSObject.Properties | Where-Object { $_.Name -notlike "PS*" }
+
+                    if ($properties) {
+                        foreach ($prop in $properties) {
+                            $output += "  $($prop.Name) = $($prop.Value)"
+                        }
+                    } else {
+                        $output += "  (No values)"
+                    }
+
+                    # For certain keys, also enumerate subkeys
+                    if ($key.Path -like "*\Services" -or $key.Path -like "*\Run*") {
+                        $subKeys = Get-ChildItem -Path $key.Path -ErrorAction SilentlyContinue | Select-Object -ExpandProperty PSChildName
+                        if ($subKeys) {
+                            $output += ""
+                            $output += "  Subkeys:"
+                            foreach ($subKey in $subKeys) {
+                                $output += "    - $subKey"
+                            }
+                        }
+                    }
+                } catch {
+                    $output += "  ERROR: Unable to read registry key - $($_.Exception.Message)"
+                }
+            } else {
+                $output += "  (Key does not exist)"
+            }
+        }
+
+        $output | Out-File -FilePath $outputPath
     }
     
     # Method to create a manifest file
@@ -490,12 +848,17 @@ class AllSystemsBackup : BackupSystem {
 
 # Factory method to create the appropriate backup system
 function New-BackupSystem {
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
     param (
         [string]$SystemName,
         [string]$BaseDir,
         [hashtable]$Options
     )
-    
+
+    if (-not $PSCmdlet.ShouldProcess("$SystemName backup to $BaseDir", "Create backup system")) {
+        return $null
+    }
+
     switch ($SystemName) {
         "network" { return [NetworkBackup]::new($BaseDir, $Options) }
         "firewall" { return [FirewallBackup]::new($BaseDir, $Options) }
@@ -550,7 +913,6 @@ $LogFile = if ($LogFile) { $LogFile } elseif ($env:KK_LOG_DIR) { "$($env:KK_LOG_
 $VERBOSE = if ($VerboseOutput) { $true } else { $false }
 $DRY_RUN = if ($DryRun) { $true } else { $false }
 $EXCLUDE_PATTERNS = if ($ExcludePattern) { $ExcludePattern } else { @("C:\Windows\Temp\*", "C:\Temp\*", "C:\ProgramData\Temp\*") }
-$BASE_DIR = if ($env:KK_BASE_DIR) { $env:KK_BASE_DIR } else { "C:\Program Files\KeyboardKowboys" }
 
 # Check for required arguments
 if (-not $SystemName -or -not $BaseDir) {
@@ -569,6 +931,11 @@ $backupOptions = @{
 
 # Create and run the appropriate backup system
 $backupSystem = New-BackupSystem -SystemName $SystemName -BaseDir $BaseDir -Options $backupOptions
-$backupSystem.Backup()
+if ($null -ne $backupSystem) {
+    $backupSystem.Backup()
+} else {
+    Write-Host "Backup operation cancelled by user." -ForegroundColor Yellow
+    exit 0
+}
 
 exit 0
