@@ -1,0 +1,2366 @@
+{
+  "TotalWarnings": 260,
+  "ScriptsAnalyzed": [
+    "Initialize-PowerShellProfile.ps1",
+    "Install-SysinternalsTools.ps1",
+    "Install-Sysmon.ps1",
+    "Install-Tools.ps1",
+    "Invoke-Backup.ps1",
+    "Invoke-Diff.ps1",
+    "Invoke-EzScript.ps1",
+    "Invoke-LogAnalyzer.ps1",
+    "Invoke-NetworkSecurityAnalysis.ps1",
+    "Invoke-PersistenceCheck.ps1",
+    "Invoke-SysmonMonitor.ps1",
+    "Rotate-Passwords.ps1",
+    "Setup-Just.ps1"
+  ],
+  "TotalIssues": 260,
+  "Severity": "Warning",
+  "Results": [
+    {
+      "Severity": 1,
+      "Message": "File 'Initialize-PowerShellProfile.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Initialize-PowerShellProfile.ps1",
+      "ScriptName": "Initialize-PowerShellProfile.ps1",
+      "Line": 48
+    },
+    {
+      "Severity": 1,
+      "Message": "The variable 'profilePaths' is assigned but never used.",
+      "Column": 1,
+      "RuleName": "PSUseDeclaredVarsMoreThanAssignments",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Initialize-PowerShellProfile.ps1",
+      "ScriptName": "Initialize-PowerShellProfile.ps1",
+      "Line": 24
+    },
+    {
+      "Severity": 1,
+      "Message": "The Variable 'sender' is an automatic variable that is built into PowerShell, assigning to it might have undesired side effects. If assignment is not by design, please use a different name.",
+      "Column": 19,
+      "RuleName": "PSAvoidAssignmentToAutomaticVariable",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-SysinternalsTools.ps1",
+      "ScriptName": "Install-SysinternalsTools.ps1",
+      "Line": 118
+    },
+    {
+      "Severity": 1,
+      "Message": "The cmdlet 'Download-File' uses an unapproved verb.",
+      "Column": 10,
+      "RuleName": "PSUseApprovedVerbs",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-SysinternalsTools.ps1",
+      "ScriptName": "Install-SysinternalsTools.ps1",
+      "Line": 104
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-SysinternalsTools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-SysinternalsTools.ps1",
+      "ScriptName": "Install-SysinternalsTools.ps1",
+      "Line": 100
+    },
+    {
+      "Severity": 1,
+      "Message": "The parameter 'DownloadSuite' has been declared but not used. ",
+      "Column": 13,
+      "RuleName": "PSReviewUnusedParameter",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-SysinternalsTools.ps1",
+      "ScriptName": "Install-SysinternalsTools.ps1",
+      "Line": 54
+    },
+    {
+      "Severity": 1,
+      "Message": "The parameter 'AddToPath' has been declared but not used. ",
+      "Column": 13,
+      "RuleName": "PSReviewUnusedParameter",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-SysinternalsTools.ps1",
+      "ScriptName": "Install-SysinternalsTools.ps1",
+      "Line": 57
+    },
+    {
+      "Severity": 1,
+      "Message": "The parameter 'sender' has been declared but not used. ",
+      "Column": 19,
+      "RuleName": "PSReviewUnusedParameter",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-SysinternalsTools.ps1",
+      "ScriptName": "Install-SysinternalsTools.ps1",
+      "Line": 118
+    },
+    {
+      "Severity": 1,
+      "Message": "The cmdlet 'Test-ToolExists' uses a plural noun. A singular noun should be used instead.",
+      "Column": 10,
+      "RuleName": "PSUseSingularNouns",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-SysinternalsTools.ps1",
+      "ScriptName": "Install-SysinternalsTools.ps1",
+      "Line": 140
+    },
+    {
+      "Severity": 1,
+      "Message": "The cmdlet 'Install-SysinternalsTools' uses a plural noun. A singular noun should be used instead.",
+      "Column": 10,
+      "RuleName": "PSUseSingularNouns",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-SysinternalsTools.ps1",
+      "ScriptName": "Install-SysinternalsTools.ps1",
+      "Line": 150
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Sysmon.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Sysmon.ps1",
+      "ScriptName": "Install-Sysmon.ps1",
+      "Line": 116
+    },
+    {
+      "Severity": 1,
+      "Message": "Missing BOM encoding for non-ASCII encoded file 'Install-Sysmon.ps1'",
+      "Column": null,
+      "RuleName": "PSUseBOMForUnicodeEncodedFile",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Sysmon.ps1",
+      "ScriptName": "Install-Sysmon.ps1",
+      "Line": null
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 35
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 50
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 52
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 66
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 69
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 88
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 102
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 112
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 126
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 146
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 147
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 149
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 152
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 166
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 170
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 179
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 193
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 207
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 215
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 241
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 277
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 281
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 289
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 17,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 305
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 17,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 314
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 322
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 323
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 324
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 330
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 339
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 348
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 352
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 357
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 372
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 373
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 375
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 378
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 383
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 397
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 398
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 399
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 402
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 403
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 404
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 405
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 406
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 407
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 408
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 409
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 410
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 411
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 412
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 415
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 416
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 417
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 1,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 427
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 1,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 449
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 1,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 450
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 1,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 451
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 1,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 454
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 1,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 455
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 1,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 456
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 1,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 457
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 1,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 458
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 1,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 459
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 1,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 460
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 1,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 461
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 1,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 463
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 1,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 464
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 1,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 465
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 1,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 466
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Install-Tools.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 1,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 467
+    },
+    {
+      "Severity": 1,
+      "Message": "Function 'Update-SessionEnvironment' has verb that could change system state. Therefore, the function has to support 'ShouldProcess'.",
+      "Column": 10,
+      "RuleName": "PSUseShouldProcessForStateChangingFunctions",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 218
+    },
+    {
+      "Severity": 1,
+      "Message": "The parameter 'SourceDir' has been declared but not used. ",
+      "Column": 13,
+      "RuleName": "PSReviewUnusedParameter",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 28
+    },
+    {
+      "Severity": 1,
+      "Message": "The cmdlet 'Install-Autoruns' uses a plural noun. A singular noun should be used instead.",
+      "Column": 10,
+      "RuleName": "PSUseSingularNouns",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Install-Tools.ps1",
+      "ScriptName": "Install-Tools.ps1",
+      "Line": 83
+    },
+    {
+      "Severity": 1,
+      "Message": "Empty catch block is used. Please use Write-Error or throw statements in catch blocks.",
+      "Column": 27,
+      "RuleName": "PSAvoidUsingEmptyCatchBlock",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Backup.ps1",
+      "ScriptName": "Invoke-Backup.ps1",
+      "Line": 345
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-Backup.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Backup.ps1",
+      "ScriptName": "Invoke-Backup.ps1",
+      "Line": 1081
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-Backup.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Backup.ps1",
+      "ScriptName": "Invoke-Backup.ps1",
+      "Line": 1099
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-Diff.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 29,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 104
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-Diff.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 29,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 105
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-Diff.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 29,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 106
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-Diff.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 29,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 107
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-Diff.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 110
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-Diff.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 132
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-Diff.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 133
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-Diff.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 134
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-Diff.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 135
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-Diff.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 136
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-Diff.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 674
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-Diff.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 675
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-Diff.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 49,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 676
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-Diff.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 807
+    },
+    {
+      "Severity": 1,
+      "Message": "Function 'New-CurrentSnapshot' has verb that could change system state. Therefore, the function has to support 'ShouldProcess'.",
+      "Column": 10,
+      "RuleName": "PSUseShouldProcessForStateChangingFunctions",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 230
+    },
+    {
+      "Severity": 1,
+      "Message": "The parameter 'BackupDate' has been declared but not used. ",
+      "Column": 13,
+      "RuleName": "PSReviewUnusedParameter",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 58
+    },
+    {
+      "Severity": 1,
+      "Message": "The parameter 'Verbose' has been declared but not used. ",
+      "Column": 13,
+      "RuleName": "PSReviewUnusedParameter",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 64
+    },
+    {
+      "Severity": 1,
+      "Message": "The parameter 'Files' has been declared but not used. ",
+      "Column": 15,
+      "RuleName": "PSReviewUnusedParameter",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 70
+    },
+    {
+      "Severity": 1,
+      "Message": "The parameter 'PropertyName' has been declared but not used. ",
+      "Column": 17,
+      "RuleName": "PSReviewUnusedParameter",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 144
+    },
+    {
+      "Severity": 1,
+      "Message": "'Write-Log' is a cmdlet that is included with PowerShell (version core-6.1.0-windows) whose definition should not be overridden",
+      "Column": 1,
+      "RuleName": "PSAvoidOverwritingBuiltInCmdlets",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 82
+    },
+    {
+      "Severity": 1,
+      "Message": "The cmdlet 'Compare-Arrays' uses a plural noun. A singular noun should be used instead.",
+      "Column": 10,
+      "RuleName": "PSUseSingularNouns",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 140
+    },
+    {
+      "Severity": 1,
+      "Message": "The cmdlet 'Compare-Ports' uses a plural noun. A singular noun should be used instead.",
+      "Column": 10,
+      "RuleName": "PSUseSingularNouns",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 425
+    },
+    {
+      "Severity": 1,
+      "Message": "The cmdlet 'Compare-Connections' uses a plural noun. A singular noun should be used instead.",
+      "Column": 10,
+      "RuleName": "PSUseSingularNouns",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 464
+    },
+    {
+      "Severity": 1,
+      "Message": "The cmdlet 'Compare-Processes' uses a plural noun. A singular noun should be used instead.",
+      "Column": 10,
+      "RuleName": "PSUseSingularNouns",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 503
+    },
+    {
+      "Severity": 1,
+      "Message": "The cmdlet 'Compare-Services' uses a plural noun. A singular noun should be used instead.",
+      "Column": 10,
+      "RuleName": "PSUseSingularNouns",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 542
+    },
+    {
+      "Severity": 1,
+      "Message": "The cmdlet 'Compare-Users' uses a plural noun. A singular noun should be used instead.",
+      "Column": 10,
+      "RuleName": "PSUseSingularNouns",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 581
+    },
+    {
+      "Severity": 1,
+      "Message": "The cmdlet 'Compare-Tasks' uses a plural noun. A singular noun should be used instead.",
+      "Column": 10,
+      "RuleName": "PSUseSingularNouns",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 681
+    },
+    {
+      "Severity": 1,
+      "Message": "The cmdlet 'Compare-Shares' uses a plural noun. A singular noun should be used instead.",
+      "Column": 10,
+      "RuleName": "PSUseSingularNouns",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-Diff.ps1",
+      "ScriptName": "Invoke-Diff.ps1",
+      "Line": 720
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-EzScript.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-EzScript.ps1",
+      "ScriptName": "Invoke-EzScript.ps1",
+      "Line": 558
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-EzScript.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-EzScript.ps1",
+      "ScriptName": "Invoke-EzScript.ps1",
+      "Line": 562
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-EzScript.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 17,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-EzScript.ps1",
+      "ScriptName": "Invoke-EzScript.ps1",
+      "Line": 569
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-EzScript.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-EzScript.ps1",
+      "ScriptName": "Invoke-EzScript.ps1",
+      "Line": 578
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-EzScript.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-EzScript.ps1",
+      "ScriptName": "Invoke-EzScript.ps1",
+      "Line": 580
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-EzScript.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-EzScript.ps1",
+      "ScriptName": "Invoke-EzScript.ps1",
+      "Line": 588
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-EzScript.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-EzScript.ps1",
+      "ScriptName": "Invoke-EzScript.ps1",
+      "Line": 594
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-EzScript.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-EzScript.ps1",
+      "ScriptName": "Invoke-EzScript.ps1",
+      "Line": 622
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-EzScript.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-EzScript.ps1",
+      "ScriptName": "Invoke-EzScript.ps1",
+      "Line": 722
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-EzScript.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-EzScript.ps1",
+      "ScriptName": "Invoke-EzScript.ps1",
+      "Line": 726
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-EzScript.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-EzScript.ps1",
+      "ScriptName": "Invoke-EzScript.ps1",
+      "Line": 1346
+    },
+    {
+      "Severity": 1,
+      "Message": "The cmdlet 'Ensure-PolicyFileEditor' uses an unapproved verb.",
+      "Column": 10,
+      "RuleName": "PSUseApprovedVerbs",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-EzScript.ps1",
+      "ScriptName": "Invoke-EzScript.ps1",
+      "Line": 556
+    },
+    {
+      "Severity": 1,
+      "Message": "Function 'Set-KerberoastingMitigation' has verb that could change system state. Therefore, the function has to support 'ShouldProcess'.",
+      "Column": 10,
+      "RuleName": "PSUseShouldProcessForStateChangingFunctions",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-EzScript.ps1",
+      "ScriptName": "Invoke-EzScript.ps1",
+      "Line": 330
+    },
+    {
+      "Severity": 1,
+      "Message": "Function 'Set-GlobalAuditPolicy' has verb that could change system state. Therefore, the function has to support 'ShouldProcess'.",
+      "Column": 10,
+      "RuleName": "PSUseShouldProcessForStateChangingFunctions",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-EzScript.ps1",
+      "ScriptName": "Invoke-EzScript.ps1",
+      "Line": 381
+    },
+    {
+      "Severity": 1,
+      "Message": "Function 'Set-WindowsDefender' has verb that could change system state. Therefore, the function has to support 'ShouldProcess'.",
+      "Column": 10,
+      "RuleName": "PSUseShouldProcessForStateChangingFunctions",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-EzScript.ps1",
+      "ScriptName": "Invoke-EzScript.ps1",
+      "Line": 777
+    },
+    {
+      "Severity": 1,
+      "Message": "Function 'Set-FirewallRules' has verb that could change system state. Therefore, the function has to support 'ShouldProcess'.",
+      "Column": 10,
+      "RuleName": "PSUseShouldProcessForStateChangingFunctions",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-EzScript.ps1",
+      "ScriptName": "Invoke-EzScript.ps1",
+      "Line": 843
+    },
+    {
+      "Severity": 1,
+      "Message": "Function 'Set-HomeGroupServices' has verb that could change system state. Therefore, the function has to support 'ShouldProcess'.",
+      "Column": 10,
+      "RuleName": "PSUseShouldProcessForStateChangingFunctions",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-EzScript.ps1",
+      "ScriptName": "Invoke-EzScript.ps1",
+      "Line": 1240
+    },
+    {
+      "Severity": 1,
+      "Message": "Function 'Set-TechnicalAccount' has verb that could change system state. Therefore, the function has to support 'ShouldProcess'.",
+      "Column": 10,
+      "RuleName": "PSUseShouldProcessForStateChangingFunctions",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-EzScript.ps1",
+      "ScriptName": "Invoke-EzScript.ps1",
+      "Line": 1282
+    },
+    {
+      "Severity": 1,
+      "Message": "The cmdlet 'Set-PasswordPolicies' uses a plural noun. A singular noun should be used instead.",
+      "Column": 10,
+      "RuleName": "PSUseSingularNouns",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-EzScript.ps1",
+      "ScriptName": "Invoke-EzScript.ps1",
+      "Line": 82
+    },
+    {
+      "Severity": 1,
+      "Message": "The cmdlet 'Set-GroupPolicies' uses a plural noun. A singular noun should be used instead.",
+      "Column": 10,
+      "RuleName": "PSUseSingularNouns",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-EzScript.ps1",
+      "ScriptName": "Invoke-EzScript.ps1",
+      "Line": 618
+    },
+    {
+      "Severity": 1,
+      "Message": "The cmdlet 'Set-FirewallRules' uses a plural noun. A singular noun should be used instead.",
+      "Column": 10,
+      "RuleName": "PSUseSingularNouns",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-EzScript.ps1",
+      "ScriptName": "Invoke-EzScript.ps1",
+      "Line": 843
+    },
+    {
+      "Severity": 1,
+      "Message": "The cmdlet 'Set-LocalAccounts' uses a plural noun. A singular noun should be used instead.",
+      "Column": 10,
+      "RuleName": "PSUseSingularNouns",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-EzScript.ps1",
+      "ScriptName": "Invoke-EzScript.ps1",
+      "Line": 1128
+    },
+    {
+      "Severity": 1,
+      "Message": "The cmdlet 'Set-HomeGroupServices' uses a plural noun. A singular noun should be used instead.",
+      "Column": 10,
+      "RuleName": "PSUseSingularNouns",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-EzScript.ps1",
+      "ScriptName": "Invoke-EzScript.ps1",
+      "Line": 1240
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-LogAnalyzer.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-LogAnalyzer.ps1",
+      "ScriptName": "Invoke-LogAnalyzer.ps1",
+      "Line": 46
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-LogAnalyzer.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-LogAnalyzer.ps1",
+      "ScriptName": "Invoke-LogAnalyzer.ps1",
+      "Line": 568
+    },
+    {
+      "Severity": 1,
+      "Message": "Command accepts pipeline input but has not defined a process block.",
+      "Column": 17,
+      "RuleName": "PSUseProcessBlockForPipelineCommand",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-LogAnalyzer.ps1",
+      "ScriptName": "Invoke-LogAnalyzer.ps1",
+      "Line": 40
+    },
+    {
+      "Severity": 1,
+      "Message": "The cmdlet 'Print-Header' uses an unapproved verb.",
+      "Column": 10,
+      "RuleName": "PSUseApprovedVerbs",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-NetworkSecurityAnalysis.ps1",
+      "ScriptName": "Invoke-NetworkSecurityAnalysis.ps1",
+      "Line": 15
+    },
+    {
+      "Severity": 1,
+      "Message": "The cmdlet 'Print-SubHeader' uses an unapproved verb.",
+      "Column": 10,
+      "RuleName": "PSUseApprovedVerbs",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-NetworkSecurityAnalysis.ps1",
+      "ScriptName": "Invoke-NetworkSecurityAnalysis.ps1",
+      "Line": 23
+    },
+    {
+      "Severity": 1,
+      "Message": "The cmdlet 'Categorize-Service' uses an unapproved verb.",
+      "Column": 10,
+      "RuleName": "PSUseApprovedVerbs",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-NetworkSecurityAnalysis.ps1",
+      "ScriptName": "Invoke-NetworkSecurityAnalysis.ps1",
+      "Line": 33
+    },
+    {
+      "Severity": 1,
+      "Message": "The cmdlet 'Classify-PortSecurity' uses an unapproved verb.",
+      "Column": 10,
+      "RuleName": "PSUseApprovedVerbs",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-NetworkSecurityAnalysis.ps1",
+      "ScriptName": "Invoke-NetworkSecurityAnalysis.ps1",
+      "Line": 119
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-PersistenceCheck.ps1' has a switch parameter default to true.",
+      "Column": 5,
+      "RuleName": "PSAvoidDefaultValueSwitchParameter",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-PersistenceCheck.ps1",
+      "ScriptName": "Invoke-PersistenceCheck.ps1",
+      "Line": 68
+    },
+    {
+      "Severity": 1,
+      "Message": "The Variable 'args' is an automatic variable that is built into PowerShell, assigning to it might have undesired side effects. If assignment is not by design, please use a different name.",
+      "Column": 5,
+      "RuleName": "PSAvoidAssignmentToAutomaticVariable",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-PersistenceCheck.ps1",
+      "ScriptName": "Invoke-PersistenceCheck.ps1",
+      "Line": 153
+    },
+    {
+      "Severity": 1,
+      "Message": "The Variable 'args' is an automatic variable that is built into PowerShell, assigning to it might have undesired side effects. If assignment is not by design, please use a different name.",
+      "Column": 9,
+      "RuleName": "PSAvoidAssignmentToAutomaticVariable",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-PersistenceCheck.ps1",
+      "ScriptName": "Invoke-PersistenceCheck.ps1",
+      "Line": 164
+    },
+    {
+      "Severity": 1,
+      "Message": "The Variable 'args' is an automatic variable that is built into PowerShell, assigning to it might have undesired side effects. If assignment is not by design, please use a different name.",
+      "Column": 9,
+      "RuleName": "PSAvoidAssignmentToAutomaticVariable",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-PersistenceCheck.ps1",
+      "ScriptName": "Invoke-PersistenceCheck.ps1",
+      "Line": 165
+    },
+    {
+      "Severity": 1,
+      "Message": "The Variable 'args' is an automatic variable that is built into PowerShell, assigning to it might have undesired side effects. If assignment is not by design, please use a different name.",
+      "Column": 5,
+      "RuleName": "PSAvoidAssignmentToAutomaticVariable",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-PersistenceCheck.ps1",
+      "ScriptName": "Invoke-PersistenceCheck.ps1",
+      "Line": 170
+    },
+    {
+      "Severity": 1,
+      "Message": "The parameter 'BaselineFile' has been declared but not used. ",
+      "Column": 13,
+      "RuleName": "PSReviewUnusedParameter",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-PersistenceCheck.ps1",
+      "ScriptName": "Invoke-PersistenceCheck.ps1",
+      "Line": 63
+    },
+    {
+      "Severity": 1,
+      "Message": "The parameter 'ShowAll' has been declared but not used. ",
+      "Column": 13,
+      "RuleName": "PSReviewUnusedParameter",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-PersistenceCheck.ps1",
+      "ScriptName": "Invoke-PersistenceCheck.ps1",
+      "Line": 75
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-PersistenceCheck.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-PersistenceCheck.ps1",
+      "ScriptName": "Invoke-PersistenceCheck.ps1",
+      "Line": 101
+    },
+    {
+      "Severity": 1,
+      "Message": "The Variable 'Event' is an automatic variable that is built into PowerShell, assigning to it might have undesired side effects. If assignment is not by design, please use a different name.",
+      "Column": 60,
+      "RuleName": "PSAvoidAssignmentToAutomaticVariable",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-SysmonMonitor.ps1",
+      "ScriptName": "Invoke-SysmonMonitor.ps1",
+      "Line": 240
+    },
+    {
+      "Severity": 1,
+      "Message": "Empty catch block is used. Please use Write-Error or throw statements in catch blocks.",
+      "Column": 15,
+      "RuleName": "PSAvoidUsingEmptyCatchBlock",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-SysmonMonitor.ps1",
+      "ScriptName": "Invoke-SysmonMonitor.ps1",
+      "Line": 220
+    },
+    {
+      "Severity": 1,
+      "Message": "Missing BOM encoding for non-ASCII encoded file 'Invoke-SysmonMonitor.ps1'",
+      "Column": null,
+      "RuleName": "PSUseBOMForUnicodeEncodedFile",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-SysmonMonitor.ps1",
+      "ScriptName": "Invoke-SysmonMonitor.ps1",
+      "Line": null
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-SysmonMonitor.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-SysmonMonitor.ps1",
+      "ScriptName": "Invoke-SysmonMonitor.ps1",
+      "Line": 131
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Invoke-SysmonMonitor.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-SysmonMonitor.ps1",
+      "ScriptName": "Invoke-SysmonMonitor.ps1",
+      "Line": 133
+    },
+    {
+      "Severity": 1,
+      "Message": "The parameter 'EventId' has been declared but not used. ",
+      "Column": 10,
+      "RuleName": "PSReviewUnusedParameter",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-SysmonMonitor.ps1",
+      "ScriptName": "Invoke-SysmonMonitor.ps1",
+      "Line": 94
+    },
+    {
+      "Severity": 1,
+      "Message": "The parameter 'Hours' has been declared but not used. ",
+      "Column": 10,
+      "RuleName": "PSReviewUnusedParameter",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-SysmonMonitor.ps1",
+      "ScriptName": "Invoke-SysmonMonitor.ps1",
+      "Line": 97
+    },
+    {
+      "Severity": 1,
+      "Message": "The parameter 'MaxEvents' has been declared but not used. ",
+      "Column": 10,
+      "RuleName": "PSReviewUnusedParameter",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-SysmonMonitor.ps1",
+      "ScriptName": "Invoke-SysmonMonitor.ps1",
+      "Line": 100
+    },
+    {
+      "Severity": 1,
+      "Message": "The parameter 'ProcessName' has been declared but not used. ",
+      "Column": 13,
+      "RuleName": "PSReviewUnusedParameter",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-SysmonMonitor.ps1",
+      "ScriptName": "Invoke-SysmonMonitor.ps1",
+      "Line": 103
+    },
+    {
+      "Severity": 1,
+      "Message": "The parameter 'CommandLine' has been declared but not used. ",
+      "Column": 13,
+      "RuleName": "PSReviewUnusedParameter",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-SysmonMonitor.ps1",
+      "ScriptName": "Invoke-SysmonMonitor.ps1",
+      "Line": 106
+    },
+    {
+      "Severity": 1,
+      "Message": "The parameter 'IpAddress' has been declared but not used. ",
+      "Column": 13,
+      "RuleName": "PSReviewUnusedParameter",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-SysmonMonitor.ps1",
+      "ScriptName": "Invoke-SysmonMonitor.ps1",
+      "Line": 109
+    },
+    {
+      "Severity": 1,
+      "Message": "The parameter 'Domain' has been declared but not used. ",
+      "Column": 13,
+      "RuleName": "PSReviewUnusedParameter",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-SysmonMonitor.ps1",
+      "ScriptName": "Invoke-SysmonMonitor.ps1",
+      "Line": 112
+    },
+    {
+      "Severity": 1,
+      "Message": "Function 'Start-Watch' has verb that could change system state. Therefore, the function has to support 'ShouldProcess'.",
+      "Column": 10,
+      "RuleName": "PSUseShouldProcessForStateChangingFunctions",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-SysmonMonitor.ps1",
+      "ScriptName": "Invoke-SysmonMonitor.ps1",
+      "Line": 676
+    },
+    {
+      "Severity": 1,
+      "Message": "The variable 'log' is assigned but never used.",
+      "Column": 9,
+      "RuleName": "PSUseDeclaredVarsMoreThanAssignments",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-SysmonMonitor.ps1",
+      "ScriptName": "Invoke-SysmonMonitor.ps1",
+      "Line": 161
+    },
+    {
+      "Severity": 1,
+      "Message": "The variable 'eventCounts' is assigned but never used.",
+      "Column": 9,
+      "RuleName": "PSUseDeclaredVarsMoreThanAssignments",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-SysmonMonitor.ps1",
+      "ScriptName": "Invoke-SysmonMonitor.ps1",
+      "Line": 199
+    },
+    {
+      "Severity": 1,
+      "Message": "The variable 'suspiciousIPPatterns' is assigned but never used.",
+      "Column": 5,
+      "RuleName": "PSUseDeclaredVarsMoreThanAssignments",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-SysmonMonitor.ps1",
+      "ScriptName": "Invoke-SysmonMonitor.ps1",
+      "Line": 326
+    },
+    {
+      "Severity": 1,
+      "Message": "The variable 'destIp' is assigned but never used.",
+      "Column": 9,
+      "RuleName": "PSUseDeclaredVarsMoreThanAssignments",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-SysmonMonitor.ps1",
+      "ScriptName": "Invoke-SysmonMonitor.ps1",
+      "Line": 370
+    },
+    {
+      "Severity": 1,
+      "Message": "The cmdlet 'Get-RecentEvents' uses a plural noun. A singular noun should be used instead.",
+      "Column": 10,
+      "RuleName": "PSUseSingularNouns",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-SysmonMonitor.ps1",
+      "ScriptName": "Invoke-SysmonMonitor.ps1",
+      "Line": 452
+    },
+    {
+      "Severity": 1,
+      "Message": "The cmdlet 'Get-SuspiciousEvents' uses a plural noun. A singular noun should be used instead.",
+      "Column": 10,
+      "RuleName": "PSUseSingularNouns",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Invoke-SysmonMonitor.ps1",
+      "ScriptName": "Invoke-SysmonMonitor.ps1",
+      "Line": 525
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Rotate-Passwords.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Rotate-Passwords.ps1",
+      "ScriptName": "Rotate-Passwords.ps1",
+      "Line": 90
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Rotate-Passwords.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Rotate-Passwords.ps1",
+      "ScriptName": "Rotate-Passwords.ps1",
+      "Line": 114
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Rotate-Passwords.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Rotate-Passwords.ps1",
+      "ScriptName": "Rotate-Passwords.ps1",
+      "Line": 123
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Rotate-Passwords.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 29,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Rotate-Passwords.ps1",
+      "ScriptName": "Rotate-Passwords.ps1",
+      "Line": 139
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Rotate-Passwords.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 25,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Rotate-Passwords.ps1",
+      "ScriptName": "Rotate-Passwords.ps1",
+      "Line": 157
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Rotate-Passwords.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 21,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Rotate-Passwords.ps1",
+      "ScriptName": "Rotate-Passwords.ps1",
+      "Line": 164
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Rotate-Passwords.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 21,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Rotate-Passwords.ps1",
+      "ScriptName": "Rotate-Passwords.ps1",
+      "Line": 191
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Rotate-Passwords.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Rotate-Passwords.ps1",
+      "ScriptName": "Rotate-Passwords.ps1",
+      "Line": 201
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Rotate-Passwords.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 21,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Rotate-Passwords.ps1",
+      "ScriptName": "Rotate-Passwords.ps1",
+      "Line": 205
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Rotate-Passwords.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Rotate-Passwords.ps1",
+      "ScriptName": "Rotate-Passwords.ps1",
+      "Line": 214
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Rotate-Passwords.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Rotate-Passwords.ps1",
+      "ScriptName": "Rotate-Passwords.ps1",
+      "Line": 224
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Rotate-Passwords.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Rotate-Passwords.ps1",
+      "ScriptName": "Rotate-Passwords.ps1",
+      "Line": 225
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Rotate-Passwords.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Rotate-Passwords.ps1",
+      "ScriptName": "Rotate-Passwords.ps1",
+      "Line": 226
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Rotate-Passwords.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Rotate-Passwords.ps1",
+      "ScriptName": "Rotate-Passwords.ps1",
+      "Line": 227
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Rotate-Passwords.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Rotate-Passwords.ps1",
+      "ScriptName": "Rotate-Passwords.ps1",
+      "Line": 228
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Rotate-Passwords.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Rotate-Passwords.ps1",
+      "ScriptName": "Rotate-Passwords.ps1",
+      "Line": 229
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Rotate-Passwords.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Rotate-Passwords.ps1",
+      "ScriptName": "Rotate-Passwords.ps1",
+      "Line": 230
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Rotate-Passwords.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 17,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Rotate-Passwords.ps1",
+      "ScriptName": "Rotate-Passwords.ps1",
+      "Line": 244
+    },
+    {
+      "Severity": 1,
+      "Message": "Function 'New-SecureRandomPassword' has verb that could change system state. Therefore, the function has to support 'ShouldProcess'.",
+      "Column": 18,
+      "RuleName": "PSUseShouldProcessForStateChangingFunctions",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Rotate-Passwords.ps1",
+      "ScriptName": "Rotate-Passwords.ps1",
+      "Line": 44
+    },
+    {
+      "Severity": 1,
+      "Message": "The cmdlet 'Download-File' uses an unapproved verb.",
+      "Column": 10,
+      "RuleName": "PSUseApprovedVerbs",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 91
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 1,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 7
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 10
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 11
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 19
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 21
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 22
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 50
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 65
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 73
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 77
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 81
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 85
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 112
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 1,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 131
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 148
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 151
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 170
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 182
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 190
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 196
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 21,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 211
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 21,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 215
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 225
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 21,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 231
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 21,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 235
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 242
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 21,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 251
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 256
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 17,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 265
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 275
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 280
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 286
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 292
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 306
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 309
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 311
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 317
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 325
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 370
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 374
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 383
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 386
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 392
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 397
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 400
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 406
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 410
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 411
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 415
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 419
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 420
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 421
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 422
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 423
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 427
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 428
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 429
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 431
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 9,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 432
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 436
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 437
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 13,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 441
+    },
+    {
+      "Severity": 1,
+      "Message": "File 'Setup-Just.ps1' uses Write-Host. Avoid using Write-Host because it might not work in all hosts, does not work when there is no host, and (prior to PS 5.0) cannot be suppressed, captured, or redirected. Instead, use Write-Output, Write-Verbose, or Write-Information.",
+      "Column": 5,
+      "RuleName": "PSAvoidUsingWriteHost",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 445
+    },
+    {
+      "Severity": 1,
+      "Message": "Function 'Update-SessionEnvironment' has verb that could change system state. Therefore, the function has to support 'ShouldProcess'.",
+      "Column": 10,
+      "RuleName": "PSUseShouldProcessForStateChangingFunctions",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 36
+    },
+    {
+      "Severity": 1,
+      "Message": "The variable 'arch' is assigned but never used.",
+      "Column": 5,
+      "RuleName": "PSUseDeclaredVarsMoreThanAssignments",
+      "ScriptPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts/Setup-Just.ps1",
+      "ScriptName": "Setup-Just.ps1",
+      "Line": 119
+    }
+  ],
+  "AnalysisPath": "/home/m00nl1g7/dev/ccdc/csusb-ccdc/just-windows/scripts",
+  "TotalScripts": 13,
+  "TotalErrors": 0,
+  "Timestamp": "2025-10-20 10:08:02"
+}

@@ -161,82 +161,71 @@ init:
     Set-Acl -Path '{{base_dir}}' -AclObject $Acl
     Write-Host 'Directory structure created at {{base_dir}}' -ForegroundColor Green
 
+    Write-Host ''
+    Write-Host 'Configuring PowerShell profile and TLS 1.2...' -ForegroundColor Green
+    & {{scripts_dir}}/Initialize-PowerShellProfile.ps1
+    Write-Host 'Environment setup complete!' -ForegroundColor Green
+
 # Run comprehensive system hardening
 harden:
     #!{{shebang}}
-    Write-Host '===== Keyboard Kowboys Security Hardening =====' -ForegroundColor Cyan
+    Write-Host '===== Keyboard Kowboys Security Hardening ====='
     $timestamp = Get-Date -Format 'yyyyMMdd_HHmmss'
     $logFile = '{{log_dir}}/hardening_' + $timestamp + '.log'
-    $ezScriptDir = "C:\Program Files\ezScript"
-    
-    # Set environment variables for the script
+    $ezScriptDir = 'C:\Program Files\ezScript'
+
     $env:KK_BASE_DIR = '{{base_dir}}'
     $env:KK_CONFIG_DIR = '{{config_dir}}'
     $env:KK_LOG_DIR = '{{log_dir}}'
-    
-    Write-Host 'Starting comprehensive hardening process. This may take several minutes...' -ForegroundColor Yellow
-    Write-Host ('Log will be saved to: ' + $logFile) -ForegroundColor Yellow
-    
-    # Create ezScript directory if it doesn't exist
+
+    Write-Host 'Starting comprehensive hardening process. This may take several minutes...'
+    Write-Host ('Log will be saved to ' + $logFile)
+
     if (-not (Test-Path $ezScriptDir)) {
-        Write-Host "Creating ezScript directory..." -ForegroundColor Yellow
+        Write-Host 'Creating ezScript directory...'
         New-Item -Path $ezScriptDir -ItemType Directory -Force | Out-Null
     }
-    
-    # Check if OS is Windows
+
     if ($IsWindows -or $env:OS -eq 'Windows_NT') {
-        # Check administrator privileges
         $isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
         if (-not $isAdmin) {
-            Write-Host 'Error: This script requires administrator privileges.' -ForegroundColor Red
-            Write-Host 'Please run the command with elevated privileges and try again.' -ForegroundColor Yellow
+            Write-Host 'ERROR - This script requires administrator privileges'
+            Write-Host 'Please run the command with elevated privileges and try again'
             exit 1
         }
-        
-        Write-Host 'Executing EzScript hardening process...' -ForegroundColor Green
-        
-        # Run the hardening script and capture output
-        & {{scripts_dir}}/Invoke-EzScript.ps1 -LogFile $logFile -Verbose *>&1 | 
-            Tee-Object -FilePath $logFile -Append |
-            ForEach-Object { 
-                if ($_ -match 'ERROR|FAIL|CRITICAL') {
-                    Write-Host $_ -ForegroundColor Red
-                } elseif ($_ -match 'WARNING') {
-                    Write-Host $_ -ForegroundColor Yellow
-                } elseif ($_ -match 'SUCCESS|COMPLETED') {
-                    Write-Host $_ -ForegroundColor Green
-                } else {
-                    Write-Host $_
-                }
-            }
-            
+
+        Write-Host 'Executing EzScript hardening process...'
+        & {{scripts_dir}}/Invoke-EzScript.ps1 -LogFile $logFile -Verbose
+
         if ($LASTEXITCODE -eq 0) {
-            Write-Host "`nHardening completed successfully!" -ForegroundColor Green
-            Write-Host "The following security measures have been applied:" -ForegroundColor Green
-            Write-Host "✓ Audit policies configured" -ForegroundColor Green
-            Write-Host "✓ SMB security settings applied" -ForegroundColor Green
-            Write-Host "✓ Group policies hardened" -ForegroundColor Green
-            Write-Host "✓ Windows Defender optimized" -ForegroundColor Green
-            Write-Host "✓ Firewall rules configured" -ForegroundColor Green
-            Write-Host "✓ Registry security settings applied" -ForegroundColor Green
-            Write-Host "✓ Local account security enforced" -ForegroundColor Green
+            Write-Host ''
+            Write-Host 'Hardening completed successfully'
+            Write-Host 'The following security measures have been applied'
+            Write-Host '- Audit policies configured'
+            Write-Host '- SMB security settings applied'
+            Write-Host '- Group policies hardened'
+            Write-Host '- Windows Defender optimized'
+            Write-Host '- Firewall rules configured'
+            Write-Host '- Registry security settings applied'
+            Write-Host '- Local account security enforced'
         } else {
-            Write-Host "`nHardening process completed with errors." -ForegroundColor Red
-            Write-Host "Please review the log file for details: $logFile" -ForegroundColor Red
+            Write-Host ''
+            Write-Host 'Hardening process completed with errors'
+            Write-Host ('Please review the log file for details ' + $logFile)
         }
     } else {
-        Write-Host 'This hardening script is designed for Windows systems only.' -ForegroundColor Red
+        Write-Host 'This hardening script is designed for Windows systems only'
         exit 1
     }
-    
-    # Display location of logs and security files
-    Write-Host "`nSecurity logs and configuration files:" -ForegroundColor Cyan
-    Write-Host "- Detailed log: $logFile" -ForegroundColor Yellow
-    Write-Host "- Security settings: C:\Program Files\SecurityConfig\" -ForegroundColor Yellow
-    Write-Host "- EzScript working directory: $ezScriptDir" -ForegroundColor Yellow
-    
-    Write-Host "`nTo view the detailed log, run:" -ForegroundColor Cyan
-    Write-Host "notepad $logFile" -ForegroundColor Yellow
+
+    Write-Host ''
+    Write-Host 'Security logs and configuration files'
+    Write-Host ('Detailed log ' + $logFile)
+    Write-Host 'Security settings C:\Program Files\SecurityConfig\'
+    Write-Host ('EzScript working directory ' + $ezScriptDir)
+    Write-Host ''
+    Write-Host 'To view the detailed log run'
+    Write-Host ('notepad ' + $logFile)
 
 # Back up critical system files
 backup system_name="all":
@@ -249,7 +238,7 @@ backup system_name="all":
     if (-not (Test-Path '{{backup_dir}}/{{system_name}}')) {
         New-Item -Path '{{backup_dir}}/{{system_name}}' -ItemType Directory -Force | Out-Null
     }
-    & {{scripts_dir}}/Invoke-Backup.ps1 -SystemType '{{system_name}}' -BackupPath '{{backup_dir}}/{{system_name}}' -Verbose
+    & {{scripts_dir}}/Invoke-Backup.ps1 -SystemName '{{system_name}}' -BaseDir '{{backup_dir}}' -Verbose
     Write-Host 'Capturing current network connections snapshot...' -ForegroundColor Yellow
     $ConnectionFile = '{{log_dir}}/connections-' + (Get-Date -Format 'yyyyMMdd-HHmmss') + '.txt'
     '==== NETWORK CONNECTIONS SNAPSHOT ====' | Out-File -FilePath $ConnectionFile
@@ -558,4 +547,86 @@ check-persistence-vt:
     $env:KK_LOG_DIR = '{{log_dir}}'
     $env:KK_TOOLS_DIR = '{{tools_dir}}/sysinternals'
     & {{scripts_dir}}/Invoke-PersistenceCheck.ps1 -VirusTotalCheck -Verbose
+
+# Configure TLS 1.2 system-wide (run once to fix SSL errors)
+fix-tls:
+    #!{{shebang}}
+    Write-Host '===== Configuring TLS 1.2 System-Wide =====' -ForegroundColor Cyan
+    Write-Host 'This will configure PowerShell profile and registry for TLS 1.2' -ForegroundColor Yellow
+    & {{scripts_dir}}/Initialize-PowerShellProfile.ps1
+    Write-Host 'TLS 1.2 configuration complete!' -ForegroundColor Green
+
+# Install or update Sysmon for real-time monitoring
+install-sysmon:
+    #!{{shebang}}
+    Write-Host '===== Installing Sysmon =====' -ForegroundColor Cyan
+    $env:KK_BASE_DIR = '{{base_dir}}'
+    $env:KK_TOOLS_DIR = '{{tools_dir}}/sysinternals'
+    $env:KK_LOG_DIR = '{{log_dir}}'
+    & {{scripts_dir}}/Install-Sysmon.ps1
+
+# Update Sysmon configuration
+update-sysmon:
+    #!{{shebang}}
+    Write-Host '===== Updating Sysmon Configuration =====' -ForegroundColor Cyan
+    $env:KK_BASE_DIR = '{{base_dir}}'
+    $env:KK_TOOLS_DIR = '{{tools_dir}}/sysinternals'
+    & {{scripts_dir}}/Install-Sysmon.ps1 -Update
+
+# Check Sysmon installation status
+check-sysmon:
+    #!{{shebang}}
+    Write-Host '===== Sysmon Status Check =====' -ForegroundColor Cyan
+    $env:KK_BASE_DIR = '{{base_dir}}'
+    $env:KK_TOOLS_DIR = '{{tools_dir}}/sysinternals'
+    & {{scripts_dir}}/Install-Sysmon.ps1 -Verify
+
+# Query recent Sysmon events
+query-sysmon hours="1":
+    #!{{shebang}}
+    Write-Host '===== Querying Sysmon Events =====' -ForegroundColor Cyan
+    & {{scripts_dir}}/Invoke-SysmonMonitor.ps1 -Query recent -Hours {{hours}}
+
+# Analyze Sysmon events for suspicious activity
+sysmon-suspicious hours="1":
+    #!{{shebang}}
+    Write-Host '===== Analyzing for Suspicious Activity =====' -ForegroundColor Cyan
+    & {{scripts_dir}}/Invoke-SysmonMonitor.ps1 -Query suspicious -Hours {{hours}}
+
+# Watch Sysmon events in real-time
+watch-sysmon:
+    #!{{shebang}}
+    Write-Host '===== Real-Time Sysmon Monitoring =====' -ForegroundColor Cyan
+    Write-Host 'Press Ctrl+C to exit' -ForegroundColor Yellow
+    & {{scripts_dir}}/Invoke-SysmonMonitor.ps1 -Watch
+
+# Query Sysmon process events
+sysmon-processes hours="1":
+    #!{{shebang}}
+    Write-Host '===== Sysmon Process Events =====' -ForegroundColor Cyan
+    & {{scripts_dir}}/Invoke-SysmonMonitor.ps1 -Query process -Hours {{hours}}
+
+# Query Sysmon network events
+sysmon-network hours="1":
+    #!{{shebang}}
+    Write-Host '===== Sysmon Network Events =====' -ForegroundColor Cyan
+    & {{scripts_dir}}/Invoke-SysmonMonitor.ps1 -Query network -Hours {{hours}}
+
+# Query Sysmon DNS events
+sysmon-dns hours="1":
+    #!{{shebang}}
+    Write-Host '===== Sysmon DNS Events =====' -ForegroundColor Cyan
+    & {{scripts_dir}}/Invoke-SysmonMonitor.ps1 -Query dns -Hours {{hours}}
+
+# Query Sysmon registry events
+sysmon-registry hours="1":
+    #!{{shebang}}
+    Write-Host '===== Sysmon Registry Events =====' -ForegroundColor Cyan
+    & {{scripts_dir}}/Invoke-SysmonMonitor.ps1 -Query registry -Hours {{hours}}
+
+# Query Sysmon file events
+sysmon-file hours="1":
+    #!{{shebang}}
+    Write-Host '===== Sysmon File Events =====' -ForegroundColor Cyan
+    & {{scripts_dir}}/Invoke-SysmonMonitor.ps1 -Query file -Hours {{hours}}
 

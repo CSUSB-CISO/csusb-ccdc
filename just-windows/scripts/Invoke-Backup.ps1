@@ -161,7 +161,9 @@ class BackupSystem {
         
         # Try PowerShell copy first
         try {
-            $files = Get-ChildItem -Path $source -File -Recurse -Force -ErrorAction Continue
+            # Get files but skip reparse points (symlinks/junctions) to avoid circular paths
+            $files = Get-ChildItem -Path $source -File -Recurse -Force -ErrorAction SilentlyContinue |
+                Where-Object { -not ($_.Attributes -band [System.IO.FileAttributes]::ReparsePoint) }
             $this.WriteLog("INFO", "Found $($files.Count) files in $source")
             
             foreach ($file in $files) {
@@ -180,17 +182,29 @@ class BackupSystem {
         } catch {
             $this.WriteLog("INFO", "PowerShell copy failed or found no files. Trying robocopy: $($_.Exception.Message)")
             
-            # Fallback to robocopy
+            # Fallback to robocopy with junction point exclusion
             $robocopyArgs = @(
                 "`"$source`"",
                 "`"$destination`"",
                 "/E",        # Copy subdirectories, including empty ones
+                "/XJ",       # Exclude junction points and symbolic links
                 "/ZB",       # Use restartable mode; if access denied use backup mode
+                "/B",        # Backup mode (use backup semantics)
                 "/COPY:DAT", # Copy Data, Attributes, and Timestamps
-                "/R:3",      # Number of retries on failed copies
+                "/R:1",      # Number of retries on failed copies (reduced to 1)
                 "/W:1",      # Wait time between retries
                 "/NP",       # No progress
-                "/MT:8"      # Multithreaded - 8 threads
+                "/NFL",      # No file list (less output)
+                "/NDL",      # No directory list (less output)
+                "/NJH",      # No job header
+                "/NJS",      # No job summary
+                "/MT:4",     # Multithreaded - 4 threads (reduced from 8)
+                "/XD",       # Exclude directories
+                "`"C:\ProgramData\Application Data`"",
+                "`"C:\ProgramData\Desktop`"",
+                "`"C:\ProgramData\Documents`"",
+                "`"C:\ProgramData\Start Menu`"",
+                "`"C:\ProgramData\Templates`""
             )
             
             # Add exclude patterns
@@ -201,8 +215,13 @@ class BackupSystem {
             
             try {
                 $this.WriteLog("INFO", "Running robocopy with arguments: $($robocopyArgs -join ' ')")
-                & robocopy $robocopyArgs
-                $this.WriteLog("INFO", "Robocopy completed for $source")
+                & robocopy $robocopyArgs 2>$null
+                # Robocopy exit codes: 0-7 are success (0=no files, 1=files copied, etc.)
+                if ($LASTEXITCODE -le 7) {
+                    $this.WriteLog("INFO", "Robocopy completed for $source")
+                } else {
+                    $this.WriteLog("WARNING", "Robocopy reported issues (exit code $LASTEXITCODE) for $source")
+                }
             } catch {
                 $this.WriteLog("WARNING", "robocopy encountered issues with $source`: $($_.Exception.Message)")
             }
@@ -282,6 +301,9 @@ class BackupSystem {
         # Registry snapshot for diff (CCDC-relevant keys)
         $this.WriteLog("INFO", "Exporting critical registry keys")
         $this.ExportRegistrySnapshot("$dumpDir\registry_snapshot.txt")
+
+        # Export registry keys as importable .reg files
+        $this.ExportRegistryFiles($dumpDir)
 
         # Installed software
         Get-CimInstance -ClassName Win32_Product | Select-Object Name, Version, Vendor |
@@ -488,7 +510,138 @@ class BackupSystem {
         $this.WriteLog("INFO", "Listing saved credentials")
         cmdkey /list | Out-File -FilePath "$dumpDir\saved_credentials.txt"
 
+        # 13. SYSMON - Configuration and recent events
+        $this.WriteLog("INFO", "Backing up Sysmon configuration and events")
+        $this.BackupSysmon($dumpDir)
+
         $this.WriteLog("INFO", "Forensic data collection completed")
+    }
+
+    # Method to backup Sysmon configuration and events
+    [void] BackupSysmon([string]$dumpDir) {
+        # Check if Sysmon is installed
+        $sysmonService = Get-Service -Name "Sysmon64" -ErrorAction SilentlyContinue
+
+        if (-not $sysmonService) {
+            $this.WriteLog("INFO", "Sysmon is not installed - skipping sysmon backup")
+            return
+        }
+
+        $this.WriteLog("INFO", "Sysmon service detected - backing up configuration and events")
+
+        # Get Sysmon config file path from registry
+        try {
+            $regPath = "HKLM:\SYSTEM\CurrentControlSet\Services\SysmonDrv\Parameters"
+            if (Test-Path $regPath) {
+                $configFile = (Get-ItemProperty -Path $regPath -Name "ConfigFile" -ErrorAction SilentlyContinue).ConfigFile
+
+                if ($configFile -and (Test-Path $configFile)) {
+                    $this.WriteLog("INFO", "Backing up Sysmon config from: $configFile")
+                    Copy-Item -Path $configFile -Destination "$dumpDir\sysmon-config.xml" -Force -ErrorAction SilentlyContinue
+                } else {
+                    $this.WriteLog("INFO", "Sysmon using built-in configuration (no config file)")
+                    "Sysmon is using built-in default configuration" | Out-File -FilePath "$dumpDir\sysmon-config.txt"
+                }
+            }
+        } catch {
+            $this.WriteLog("WARNING", "Could not retrieve Sysmon config: $($_.Exception.Message)")
+        }
+
+        # Export recent Sysmon events for forensic timeline
+        try {
+            $this.WriteLog("INFO", "Exporting recent Sysmon events (last 1000 events)")
+
+            # Export to JSON for easy parsing
+            $sysmonEvents = Get-WinEvent -LogName "Microsoft-Windows-Sysmon/Operational" -MaxEvents 1000 -ErrorAction Stop |
+                Select-Object TimeCreated, Id, LevelDisplayName, Message |
+                Sort-Object TimeCreated -Descending
+
+            # Export as JSON
+            $sysmonEvents | ConvertTo-Json -Depth 3 | Out-File -FilePath "$dumpDir\sysmon-events.json" -Encoding UTF8
+
+            # Export as text for quick review
+            $sysmonEvents | Out-File -FilePath "$dumpDir\sysmon-events.txt"
+
+            $this.WriteLog("INFO", "Exported $($sysmonEvents.Count) Sysmon events")
+
+            # Get event statistics
+            $eventStats = $sysmonEvents | Group-Object Id | Sort-Object Count -Descending
+            "=== SYSMON EVENT STATISTICS ===" | Out-File -FilePath "$dumpDir\sysmon-stats.txt"
+            "Last 1000 events breakdown:" | Out-File -FilePath "$dumpDir\sysmon-stats.txt" -Append
+            "" | Out-File -FilePath "$dumpDir\sysmon-stats.txt" -Append
+            foreach ($stat in $eventStats) {
+                $eventName = switch ($stat.Name) {
+                    1 { "Process Create" }
+                    2 { "File Time Changed" }
+                    3 { "Network Connect" }
+                    5 { "Process Terminate" }
+                    7 { "Image Load" }
+                    8 { "CreateRemoteThread" }
+                    10 { "Process Access" }
+                    11 { "File Create" }
+                    12 { "Registry Add/Delete" }
+                    13 { "Registry Set" }
+                    15 { "File Stream Create" }
+                    22 { "DNS Query" }
+                    23 { "File Delete" }
+                    default { "Other" }
+                }
+                "Event ID $($stat.Name): $($stat.Count) - $eventName" | Out-File -FilePath "$dumpDir\sysmon-stats.txt" -Append
+            }
+
+        } catch {
+            $this.WriteLog("WARNING", "Could not export Sysmon events: $($_.Exception.Message)")
+            "Sysmon events could not be exported: $($_.Exception.Message)" | Out-File -FilePath "$dumpDir\sysmon-events.txt"
+        }
+
+        # Record Sysmon service status
+        "=== SYSMON SERVICE STATUS ===" | Out-File -FilePath "$dumpDir\sysmon-status.txt"
+        "Service Status: $($sysmonService.Status)" | Out-File -FilePath "$dumpDir\sysmon-status.txt" -Append
+        "Start Type: $($sysmonService.StartType)" | Out-File -FilePath "$dumpDir\sysmon-status.txt" -Append
+        "Display Name: $($sysmonService.DisplayName)" | Out-File -FilePath "$dumpDir\sysmon-status.txt" -Append
+
+        $this.WriteLog("INFO", "Sysmon backup completed")
+    }
+
+    # Method to export registry keys as importable .reg files for emergency restore
+    [void] ExportRegistryFiles([string]$dumpDir) {
+        $this.WriteLog("INFO", "Exporting registry keys as .reg files for emergency restore")
+
+        # Network TCP/IP settings
+        $this.ExportRegKey("HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "$dumpDir\network_tcpip.reg")
+        $this.ExportRegKey("HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces", "$dumpDir\network_interfaces.reg")
+
+        # RDP settings
+        $this.ExportRegKey("HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server", "$dumpDir\rdp_settings.reg")
+
+        # Firewall policy (registry portion)
+        $this.ExportRegKey("HKLM\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy", "$dumpDir\firewall_policy.reg")
+
+        # Services
+        $this.ExportRegKey("HKLM\SYSTEM\CurrentControlSet\Services", "$dumpDir\services.reg")
+
+        # Run keys
+        $this.ExportRegKey("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run", "$dumpDir\run_keys.reg")
+        $this.ExportRegKey("HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce", "$dumpDir\runonce_keys.reg")
+
+        # Winlogon
+        $this.ExportRegKey("HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon", "$dumpDir\winlogon.reg")
+
+        $this.WriteLog("INFO", "Registry .reg files exported successfully")
+    }
+
+    # Helper method to export a single registry key
+    [void] ExportRegKey([string]$regPath, [string]$outputFile) {
+        try {
+            $result = & reg export "$regPath" "$outputFile" /y 2>&1
+            if ($LASTEXITCODE -eq 0) {
+                $this.WriteLog("INFO", "Exported registry key: $regPath")
+            } else {
+                $this.WriteLog("WARNING", "Could not export registry key $regPath`: $result")
+            }
+        } catch {
+            $this.WriteLog("WARNING", "Failed to export registry key $regPath`: $($_.Exception.Message)")
+        }
     }
 
     # Method to export CCDC-relevant registry keys
@@ -735,6 +888,15 @@ class NetworkBackup : BackupSystem {
         Get-NetConnectionProfile | Out-File -FilePath "$dumpDir\connection_profiles.txt"
         Get-NetNeighbor | Out-File -FilePath "$dumpDir\arp_cache.txt"
         Get-NetAdapterStatistics | Out-File -FilePath "$dumpDir\interface_statistics.txt"
+
+        # Export firewall rules for emergency restore
+        $firewallBackupPath = Join-Path $dumpDir "firewall-rules.wfw"
+        try {
+            netsh advfirewall export "$firewallBackupPath" | Out-Null
+            $this.WriteLog("INFO", "Exported firewall rules to $firewallBackupPath")
+        } catch {
+            $this.WriteLog("WARNING", "Could not export firewall rules: $($_.Exception.Message)")
+        }
     }
 }
 

@@ -412,13 +412,13 @@ SUMMARY:
 - Suspicious entries: $($suspicious.Count)
 
 NEW ENTRIES:
-$($newEntries | ForEach-Object { "  [$($_.\ 'Entry Location')] $($_.Entry) -> $($_.'Image Path')" } | Out-String)
+$($newEntries | ForEach-Object { "  [$($_.'Entry Location')] $($_.Entry) -> $($_.'Image Path')" } | Out-String)
 
 MODIFIED ENTRIES:
 $($modifiedEntries | ForEach-Object { "  [$($_.'Entry Location')] $($_.Entry) -> $($_.'Image Path')" } | Out-String)
 
 SUSPICIOUS ENTRIES:
-$($suspicious | ForEach-Object { "  [$($_. Entry.'Entry Location')] $($_.Entry.Entry) -> $($_.Entry.'Image Path') [REASONS: $($_.Reasons)]" } | Out-String)
+$($suspicious | ForEach-Object { "  [$($_.Entry.'Entry Location')] $($_.Entry.Entry) -> $($_.Entry.'Image Path') [REASONS: $($_.Reasons)]" } | Out-String)
 "@
 
         $report | Out-File -FilePath $reportFile -Encoding UTF8

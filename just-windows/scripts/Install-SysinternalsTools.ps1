@@ -78,6 +78,7 @@ $sysinternalsSuiteUrl = "https://download.sysinternals.com/files/SysinternalsSui
 $essentialTools = @(
     "autorunsc64.exe",  # Persistence detection
     "sysmon64.exe",     # System monitoring
+    "psexec.exe",       # Remote execution and privilege elevation
     "pslist.exe",       # Process listing
     "psloglist.exe",    # Event log extraction
     "handle.exe",       # Handle enumeration

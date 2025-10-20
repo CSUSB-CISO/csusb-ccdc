@@ -63,6 +63,89 @@ function Write-SecurityLog {
     }
 }
 
+# Set-PasswordPolicies
+<#
+.SYNOPSIS
+    Configures critical password security policies.
+
+.DESCRIPTION
+    Sets password policies including disabling reversible encryption and
+    configuring account lockout policies using secedit.
+
+.NOTES
+    Requires administrative privileges.
+    Uses secedit.exe to modify security policies.
+
+.EXAMPLE
+    Set-PasswordPolicies
+#>
+function Set-PasswordPolicies {
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
+    param()
+
+    Write-Verbose "Configuring password policies..." -Verbose
+
+    if (-not $PSCmdlet.ShouldProcess("Password Security Policies", "Configure password policies including reversible encryption")) {
+        return
+    }
+
+    try {
+        # Export current policy
+        $tempCfg = "$env:TEMP\secpol.cfg"
+        $tempDb = "$env:TEMP\secedit.sdb"
+
+        Write-Verbose "Exporting current security policy..."
+        secedit /export /cfg $tempCfg /quiet
+
+        if (Test-Path $tempCfg) {
+            # Read current policy
+            $policy = Get-Content $tempCfg
+
+            # Modify policy settings
+            $newPolicy = $policy | ForEach-Object {
+                # Disable reversible encryption (HIGH severity issue)
+                if ($_ -match '^ClearTextPassword\s*=') {
+                    'ClearTextPassword = 0'
+                }
+                # Set account lockout threshold
+                elseif ($_ -match '^LockoutBadCount\s*=') {
+                    'LockoutBadCount = 10'
+                }
+                # Set account lockout duration
+                elseif ($_ -match '^LockoutDuration\s*=') {
+                    'LockoutDuration = 15'
+                }
+                # Reset account lockout counter
+                elseif ($_ -match '^ResetLockoutCount\s*=') {
+                    'ResetLockoutCount = 15'
+                }
+                else {
+                    $_
+                }
+            }
+
+            # Save modified policy
+            $newPolicy | Set-Content $tempCfg -Force
+
+            # Apply policy
+            Write-Verbose "Applying password security policies..."
+            secedit /configure /db $tempDb /cfg $tempCfg /areas SECURITYPOLICY /quiet
+
+            # Clean up
+            Remove-Item $tempCfg -Force -ErrorAction SilentlyContinue
+            Remove-Item $tempDb -Force -ErrorAction SilentlyContinue
+
+            Write-SecurityLog -Component "PasswordPolicy" -Message "Successfully configured password policies (disabled reversible encryption)"
+        }
+        else {
+            Write-SecurityLog -Component "PasswordPolicy" -Message "Failed to export security policy" -Level Error
+        }
+    }
+    catch {
+        Write-SecurityLog -Component "PasswordPolicy" -Message $_.Exception.Message -Level Error
+    }
+}
+
 # Set-AuditPolicy
 <#
 .SYNOPSIS
@@ -335,41 +418,90 @@ function Set-GlobalAuditPolicy {
     Set-SMBConfiguration
 #>
 function Set-SMBConfiguration {
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='High')]
     param()
+
     Write-Verbose "Configuring SMB settings..." -Verbose
+
+    if (-not $PSCmdlet.ShouldProcess("SMB Configuration", "Disable SMBv1 protocol")) {
+        return
+    }
+
     try {
         # Replace Get-WmiObject with Get-CimInstance
-        If ($PSVersionTable.PSVersion -ge [version]"3.0") { 
-            $OSWMI = Get-CimInstance -ClassName Win32_OperatingSystem -Property Caption,Version 
-        } Else { 
+        If ($PSVersionTable.PSVersion -ge [version]"3.0") {
+            $OSWMI = Get-CimInstance -ClassName Win32_OperatingSystem -Property Caption,Version
+        } Else {
             # Fallback for older PowerShell versions
             Write-Warning "PowerShell version < 3.0 detected. Some features may not work as expected."
             return
         }
-        
+
         $OSVer = [version]$OSWMI.Version
         $OSName = $OSWMI.Caption
 
-        if ($OSVer -ge [version]"6.2") { 
-            If ((Get-SmbServerConfiguration).EnableSMB1Protocol) { 
-                Set-SmbServerConfiguration -EnableSMB1Protocol $false -Force 
-            } 
-        }
-        elseif ($OSVer -ge [version]"6.0" -and $OSVer -lt [version]"6.2") { 
-            Set-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters -Name SMB1 -Value 0 -Type DWord 
-        }
+        Write-Verbose "Disabling SMBv1 protocol (HIGH severity security risk)..."
 
-        if ($OSVer -ge [version]"6.3" -and $OSName -match "\bserver\b") { 
-            If ((Get-WindowsFeature FS-SMB1).Installed) { Remove-WindowsFeature FS-SMB1 } 
-        }
-        elseif ($OSVer -ge [version]"6.3" -and $OSName -notmatch "\bserver\b") {
-            If ((Get-WindowsOptionalFeature -Online -FeatureName smb1protocol).State -eq "Enabled") { 
-                Disable-WindowsOptionalFeature -Online -FeatureName smb1protocol 
+        # Method 1: Set-SmbServerConfiguration (Windows 8/Server 2012+)
+        if ($OSVer -ge [version]"6.2") {
+            try {
+                $smbConfig = Get-SmbServerConfiguration
+                If ($smbConfig.EnableSMB1Protocol) {
+                    Write-Verbose "Disabling SMB1 via Set-SmbServerConfiguration"
+                    Set-SmbServerConfiguration -EnableSMB1Protocol $false -Force -Confirm:$false
+                }
+            }
+            catch {
+                Write-Warning "Failed to disable SMB1 via Set-SmbServerConfiguration: $_"
             }
         }
-        
-        Write-SecurityLog -Component "SMBConfig" -Message "Successfully configured SMB settings"
+
+        # Method 2: Registry (Windows Vista/7/Server 2008)
+        if ($OSVer -ge [version]"6.0") {
+            Write-Verbose "Disabling SMB1 via registry"
+            $regPath = "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters"
+            Set-ItemProperty -Path $regPath -Name SMB1 -Value 0 -Type DWord -Force -ErrorAction SilentlyContinue
+        }
+
+        # Method 3: Remove Windows Feature (Server 2012+)
+        if ($OSVer -ge [version]"6.3" -and $OSName -match "\bserver\b") {
+            try {
+                $feature = Get-WindowsFeature FS-SMB1 -ErrorAction SilentlyContinue
+                If ($feature -and $feature.Installed) {
+                    Write-Verbose "Removing SMB1 Windows Feature (Server)"
+                    Remove-WindowsFeature FS-SMB1 -ErrorAction Stop
+                }
+            }
+            catch {
+                Write-Warning "Failed to remove SMB1 feature: $_"
+            }
+        }
+        # Method 4: Disable Optional Feature (Windows 10+)
+        elseif ($OSVer -ge [version]"6.3" -and $OSName -notmatch "\bserver\b") {
+            try {
+                $feature = Get-WindowsOptionalFeature -Online -FeatureName smb1protocol -ErrorAction SilentlyContinue
+                If ($feature -and $feature.State -eq "Enabled") {
+                    Write-Verbose "Disabling SMB1 Optional Feature (Client)"
+                    Disable-WindowsOptionalFeature -Online -FeatureName smb1protocol -NoRestart -ErrorAction Stop
+                }
+            }
+            catch {
+                Write-Warning "Failed to disable SMB1 optional feature: $_"
+            }
+        }
+
+        # Method 5: Disable SMB1 drivers (comprehensive)
+        Write-Verbose "Disabling SMB1 drivers"
+        $drivers = @("mrxsmb10")
+        foreach ($driver in $drivers) {
+            $driverPath = "HKLM:\SYSTEM\CurrentControlSet\Services\$driver"
+            if (Test-Path $driverPath) {
+                Set-ItemProperty -Path $driverPath -Name Start -Value 4 -Type DWord -Force -ErrorAction SilentlyContinue
+                Write-Verbose "Disabled $driver driver"
+            }
+        }
+
+        Write-SecurityLog -Component "SMBConfig" -Message "Successfully configured SMB settings (SMBv1 disabled)"
     }
     catch {
         Write-SecurityLog -Component "SMBConfig" -Message $_.Exception.Message -Level Error
@@ -1017,7 +1149,7 @@ function Set-LocalAccounts {
         foreach ($user in $users) {
             # Skip excluded accounts
             if ($excludedAccounts -contains $user.Name) {
-                Write-Verbose "Skipping password change for excluded account: $($user.Name)" -Level Info
+                Write-Verbose "Skipping password change for excluded account: $($user.Name)"
                 continue
             }
 
@@ -1219,10 +1351,11 @@ function Invoke-SecurityHardening {
     Initialize-SecurityDirectory
     
     $components = @(
+        @{Name = "Set-PasswordPolicies"; Description = "Configuring password policies (disable reversible encryption)"},
         @{Name = "Set-AuditPolicy"; Description = "Configuring audit policies"},
         @{Name = "Set-GlobalAuditPolicy"; Description = "Setting up global audit policies"},
         @{Name = "Ensure-PolicyFileEditor"; Description = "Ensure required modules installed"}
-        @{Name = "Set-SMBConfiguration"; Description = "Configuring SMB protocol"},
+        @{Name = "Set-SMBConfiguration"; Description = "Disabling SMBv1 protocol"},
         @{Name = "Enable-SecureSMB"; Description = "Enabling secure SMB"},
         @{Name = "Set-GroupPolicies"; Description = "Setting group policies"},
         @{Name = "Disable-TelnetService"; Description = "Disabling Telnet"},
@@ -1242,8 +1375,27 @@ function Invoke-SecurityHardening {
     foreach ($component in $components) {
         Write-Verbose "`nExecuting: $($component.Description)" -Verbose
         try {
-            # Pass WhatIf and Confirm preferences to child functions
-            & $component.Name -WhatIf:$WhatIfPreference -Confirm:$false
+            # Check if function supports ShouldProcess by examining CmdletBinding attribute
+            $func = Get-Command $component.Name -ErrorAction SilentlyContinue
+            $supportsShouldProcess = $false
+
+            if ($func) {
+                # Check if the function has CmdletBinding with SupportsShouldProcess
+                $attributes = $func.ScriptBlock.Attributes
+                foreach ($attr in $attributes) {
+                    if ($attr -is [System.Management.Automation.CmdletBindingAttribute]) {
+                        $supportsShouldProcess = $attr.SupportsShouldProcess
+                        break
+                    }
+                }
+            }
+
+            # Only pass WhatIf if the function actually supports it
+            if ($supportsShouldProcess) {
+                & $component.Name -WhatIf:$WhatIfPreference -Confirm:$false
+            } else {
+                & $component.Name
+            }
         }
         catch {
             Write-SecurityLog -Component "MainExecution" -Message "Failed to execute $($component.Name): $_" -Level Error
