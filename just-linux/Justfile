@@ -24,17 +24,17 @@ help recipe="":
         echo "For detailed help on a specific recipe, run: just help <recipe-name>"
     else
         echo "===== HELP: {{recipe}} ====="
-        
+
         # Extract recipe definition to show all options
         RECIPE_DEF=$(just --show {{recipe}} | grep -E "^{{recipe}}.*:$" | head -1)
         if [ -n "$RECIPE_DEF" ]; then
             echo "USAGE: just $RECIPE_DEF" | sed 's/://'
         fi
-        
+
         echo ""
         echo "DESCRIPTION:"
         just --show {{recipe}} | grep -E "^# " | sed 's/^# //' || echo "No help available for '{{recipe}}'"
-        
+
         # Add specific option information for certain commands
         case "{{recipe}}" in
             "backup")
@@ -77,8 +77,23 @@ help recipe="":
                 echo "DATE FORMAT:"
                 echo "  YYYYMMDD (e.g., 20250315 for March 15, 2025)"
                 ;;
+            "firewall-ready"|"firewall-watch"|"firewall-init"|"firewall-apply"|"firewall-deny")
+                echo ""
+                echo "FIREWALL WORKFLOW:"
+                echo "  1. just firewall-ready    # Backup rules, disable ufw/firewalld, setup logging"
+                echo "  2. just firewall-watch    # (Optional) Observe traffic before locking down"
+                echo "  3. just firewall-init     # Apply base rules (loopback + established/related)"
+                echo "  4. just firewall-apply    # Add your allow rules"
+                echo "  5. just firewall-deny     # Apply implicit deny (run LAST)"
+                echo ""
+                echo "FIREWALL-APPLY OPTIONS:"
+                echo "  CHAIN  - INPUT or OUTPUT"
+                echo "  ADDR   - IP address or 'any'"
+                echo "  PORTS  - Single port, comma-separated, or space-separated"
+                echo "  PROTO  - tcp (default) or udp"
+                ;;
         esac
-        
+
         echo ""
         echo "EXAMPLES:"
         case "{{recipe}}" in
@@ -98,6 +113,25 @@ help recipe="":
             "diff-files")
                 echo "  just diff-files \"/etc/hosts /etc/hostname\"  # Compare specific files"
                 ;;
+            "firewall-ready")
+                echo "  just firewall-ready     # Prepare system for iptables"
+                ;;
+            "firewall-watch")
+                echo "  just firewall-watch        # Watch for 5 minutes (default)"
+                echo "  just firewall-watch 10m    # Watch for 10 minutes"
+                ;;
+            "firewall-init")
+                echo "  just firewall-init      # Apply loopback + established/related"
+                ;;
+            "firewall-apply")
+                echo "  just firewall-apply INPUT any 22"
+                echo "  just firewall-apply INPUT any 80,443"
+                echo "  just firewall-apply OUTPUT 192.168.220.254 53 udp"
+                echo "  just firewall-apply OUTPUT 192.168.220.254 88,389,636,445"
+                ;;
+            "firewall-deny")
+                echo "  just firewall-deny      # Lock it down (run LAST)"
+                ;;
             *)
                 # Extract examples from the recipe documentation
                 EXAMPLES=$(just --show {{recipe}} | grep -A 10 "Usage:" | grep -v "Usage:")
@@ -108,7 +142,7 @@ help recipe="":
                 fi
                 ;;
         esac
-    fi
+    fi        
 
 # Start real-time file monitoring
 #
@@ -914,3 +948,66 @@ status:
     else
         echo "auth log not accessible - run as root to view auth failures"
     fi
+
+# Prepare system for iptables (disable ufw/firewalld, backup rules)
+#
+# Disables competing firewall managers, backs up existing rules,
+# and sets up logging for new connections.
+#
+# Usage: just firewall-ready
+firewall-ready:
+    {{scripts_dir}}/firewall.sh ready
+
+# Watch new connections for specified duration
+#
+# Monitors and logs new inbound/outbound connections in real-time.
+# Output is saved to /tmp/connections-<timestamp>.log
+#
+# NOTE: Requires firewall-ready to be run first.
+#
+# Options:
+#   duration - How long to watch (default: 5m)
+#
+# Usage:
+#   just firewall-watch        # Watch for 5 minutes
+#   just firewall-watch 10m    # Watch for 10 minutes
+firewall-watch duration="5m":
+    {{scripts_dir}}/firewall.sh watch {{duration}}
+
+# Initialize base firewall rules (loopback + established/related)
+#
+# Applies foundational rules that should be set before any other rules:
+#   - Allow all loopback traffic
+#   - Allow established/related connections
+#
+# Usage: just firewall-init
+firewall-init:
+    {{scripts_dir}}/firewall.sh init
+
+# Apply firewall allow rule
+#
+# Adds an ACCEPT rule for specified chain, address, and ports.
+#
+# Options:
+#   chain - INPUT or OUTPUT
+#   addr  - IP address or "any"
+#   ports - Single port, comma-separated, or space-separated
+#   proto - tcp (default) or udp
+#
+# Usage:
+#   just firewall-apply INPUT any 22
+#   just firewall-apply OUTPUT 192.168.220.254 53 udp
+#   just firewall-apply OUTPUT 192.168.220.254 88,389,636,445
+firewall-apply +args:
+    {{scripts_dir}}/firewall.sh apply {{args}}
+
+# Apply implicit deny (run LAST after all allow rules)
+#
+# Adds DROP rules at the end of INPUT and OUTPUT chains.
+# Also logs dropped packets before dropping.
+#
+# WARNING: Run this AFTER all your allow rules are in place.
+#
+# Usage: just firewall-deny
+firewall-deny:
+    {{scripts_dir}}/firewall.sh deny
