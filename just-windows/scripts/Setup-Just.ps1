@@ -90,7 +90,7 @@ New-Item -Path $TmpDir -ItemType Directory -Force | Out-Null
 
 try {
     # Download the zip file
-    $ZipUrl = "https://github.com/CSUSB-CISO/csusb-ccdc/releases/download/CCDC-2024-2025/just-win.zip"
+    $ZipUrl = "https://github.com/CSUSB-CISO/csusb-ccdc/releases/download/CCDC-2025-2026/just-win.zip"
     $ZipFile = Join-Path -Path $TmpDir -ChildPath "just-win.zip"
     
     Write-Host "Downloading Keyboard Kowboys files..." -ForegroundColor Green
