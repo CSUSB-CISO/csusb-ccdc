@@ -193,11 +193,11 @@ cd "$TMP_DIR"
 # Download the zip file
 echo "Downloading Keyboard Kowboys files..."
 if command -v wget > /dev/null 2>&1; then
-    wget --no-check-certificate -q "https://github.com/CSUSB-CISO/csusb-ccdc/releases/download/CCDC-2024-2025/just-lin.zip" -O just-lin.zip
+    wget --no-check-certificate -q "https://github.com/CSUSB-CISO/csusb-ccdc/releases/download/CCDC-2025-2026/just-lin.zip" -O just-lin.zip
 elif [ -n "$BUSYBOX_CMD" ]; then
-    $BUSYBOX_CMD wget --no-check-certificate -q "https://github.com/CSUSB-CISO/csusb-ccdc/releases/download/CCDC-2024-2025/just-lin.zip" -O just-lin.zip
+    $BUSYBOX_CMD wget --no-check-certificate -q "https://github.com/CSUSB-CISO/csusb-ccdc/releases/download/CCDC-2025-2026/just-lin.zip" -O just-lin.zip
 elif [ -n "$CURL_CMD" ]; then
-    $CURL_CMD -k -L -o just-lin.zip "https://github.com/CSUSB-CISO/csusb-ccdc/releases/download/CCDC-2024-2025/just-lin.zip"
+    $CURL_CMD -k -L -o just-lin.zip "https://github.com/CSUSB-CISO/csusb-ccdc/releases/download/CCDC-2025-2026/just-lin.zip"
 else
     echo "Error: No method available to download files."
     rm -rf "$TMP_DIR"
